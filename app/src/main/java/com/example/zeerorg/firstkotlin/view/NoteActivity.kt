@@ -19,11 +19,11 @@ import com.example.zeerorg.firstkotlin.presenter.PresenterUsingViewInterface
 
 /**
  *
- * No use of abstracting MainActivityInterface but still I'm doing it idk why??
+ * No use of abstracting NoteActivityInterface but still I'm doing it idk why??
  *
  */
 
-class MainActivity : AppCompatActivity(), MainActivityInterface, PresenterUsingViewInterface {
+class NoteActivity : AppCompatActivity(), NoteActivityInterface, PresenterUsingViewInterface {
 
     //val actionBar by lazy(LazyThreadSafetyMode.NONE, { supportActionBar })
     val actionBar by threadSafeLazy { supportActionBar }

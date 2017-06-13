@@ -1,7 +1,6 @@
 package com.example.zeerorg.firstkotlin.model
 
 import android.util.Log
-import com.example.zeerorg.firstkotlin.NotesItem
 import com.raizlabs.android.dbflow.sql.language.Select
 
 /**
@@ -24,10 +23,6 @@ class NoteRepository : NoteRepositoryInterface {
         val note =  Note()
         note.data = data
         return note
-    }
-
-    fun getListNotesItem(): MutableList<NotesItem> {
-        return getAll().map { NotesItem(it.data) }.toMutableList()
     }
 
     fun addNote(note: Note) {
