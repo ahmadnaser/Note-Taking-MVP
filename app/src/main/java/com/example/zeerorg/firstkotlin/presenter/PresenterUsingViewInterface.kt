@@ -5,6 +5,6 @@ package com.example.zeerorg.firstkotlin.presenter
  *
  * It lets presenter communicate with View
  */
-interface PresenterViewInterface {
+interface PresenterUsingViewInterface {
     fun updateRecycler()
 }

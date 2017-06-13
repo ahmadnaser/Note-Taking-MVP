@@ -14,7 +14,7 @@ import android.widget.EditText
 import com.example.zeerorg.firstkotlin.R
 import com.example.zeerorg.firstkotlin.presenter.Presenter
 import com.example.zeerorg.firstkotlin.presenter.PresenterInterface
-import com.example.zeerorg.firstkotlin.presenter.PresenterViewInterface
+import com.example.zeerorg.firstkotlin.presenter.PresenterUsingViewInterface
 
 
 /**
@@ -23,7 +23,7 @@ import com.example.zeerorg.firstkotlin.presenter.PresenterViewInterface
  *
  */
 
-class MainActivity : AppCompatActivity(), MainActivityInterface, PresenterViewInterface {
+class MainActivity : AppCompatActivity(), MainActivityInterface, PresenterUsingViewInterface {
 
     //val actionBar by lazy(LazyThreadSafetyMode.NONE, { supportActionBar })
     val actionBar by threadSafeLazy { supportActionBar }
