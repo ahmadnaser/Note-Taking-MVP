@@ -10,6 +10,7 @@ import com.mikepenz.fastadapter.items.AbstractItem
  * Created by zeerorg on 6/8/17.
  */
 
+// Bad idea for MVP because view is implemented inside and no model is taken so no change this
 class NotesItem(val data: String = "") : AbstractItem<NotesItem, NotesItem.ViewHolder>() {
 
 //    constructor(data: String) {
@@ -25,7 +26,7 @@ class NotesItem(val data: String = "") : AbstractItem<NotesItem, NotesItem.ViewH
         return R.layout.note_item
     }
 
-    override fun getViewHolder(v: View): ViewHolder { //removed null test to see
+    override fun getViewHolder(v: View): ViewHolder { //removed null test to see : looks good for now
         return ViewHolder(v)
     }
 
