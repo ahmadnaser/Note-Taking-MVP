@@ -3,13 +3,14 @@ package com.example.zeerorg.firstkotlin.presenter
 import com.example.zeerorg.firstkotlin.model.Note
 import com.example.zeerorg.firstkotlin.model.NoteRepository
 import com.example.zeerorg.firstkotlin.model.NoteRepositoryInterface
+import com.example.zeerorg.firstkotlin.view.NoteDependencyInterface
 
 /**
  * Created by zeerorg on 6/12/17.
  *
  * TODO : inject view in presenter view interface :: Actually NO! because it is a dependency and should not be given in a method
  */
-class Presenter(val view: PresenterUsingNoteViewInterface, val noteRepo: NoteRepositoryInterface = NoteRepository()) : PresenterInterface {
+class Presenter(val view: NoteDependencyInterface, val noteRepo: NoteRepositoryInterface = NoteRepository()) : PresenterInterface {
 
     private val notesList = noteRepo.getAll()
 

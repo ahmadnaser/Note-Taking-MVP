@@ -2,20 +2,25 @@ package com.example.zeerorg.firstkotlin.presenter
 
 import com.example.zeerorg.firstkotlin.model.UserRepository
 import com.example.zeerorg.firstkotlin.model.UserRepositoryInterface
+import com.example.zeerorg.firstkotlin.view.LoginDependencyInterface
 
 /**
  * Created by zeerorg on 6/14/17.
  */
-class LoginPresenter(val loginRepo: UserRepositoryInterface = UserRepository()) : LoginPresenterInterface {
+class LoginPresenter(val loginView: LoginDependencyInterface, val loginRepo: UserRepositoryInterface = UserRepository()) : LoginPresenterInterface {
 
-    override fun checkLogin(): Boolean {
-        return loginRepo.isLoggedIn()
+    override fun checkLogin() {
+        if(loginRepo.isLoggedIn())
+            loginView.startNoteActivity()
     }
 
     override fun attemptLogin(email: String, password: String) {
         // TODO : validate email and password
+        loginView.showProgress(true)
         if(password.length < 6) {
-            // TODO : call a method for view error
+            loginView.passwordError("Password too short")
+        } else if(!email.contains("@")) {
+            loginView.emailError("Not Valid EMail")
         } else {
             loginRepo.exists(email,
                     {
@@ -26,14 +31,13 @@ class LoginPresenter(val loginRepo: UserRepositoryInterface = UserRepository()) 
                     }
             )
         }
-
     }
 
     private fun success(){
-        // TODO : return on success
+        loginView.startNoteActivity()
     }
 
     private fun fail() {
-
+        loginView.showProgress(false)
     }
 }

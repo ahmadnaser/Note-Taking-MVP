@@ -14,7 +14,6 @@ import android.widget.EditText
 import com.example.zeerorg.firstkotlin.R
 import com.example.zeerorg.firstkotlin.presenter.Presenter
 import com.example.zeerorg.firstkotlin.presenter.PresenterInterface
-import com.example.zeerorg.firstkotlin.presenter.PresenterUsingNoteViewInterface
 import com.example.zeerorg.firstkotlin.view.recyclers.NotesAdapter
 
 
@@ -24,7 +23,7 @@ import com.example.zeerorg.firstkotlin.view.recyclers.NotesAdapter
  *
  */
 
-class NoteActivity : AppCompatActivity(), NoteActivityInterface, PresenterUsingNoteViewInterface {
+class NoteActivity : AppCompatActivity(), NoteActivityInterface, NoteDependencyInterface {
 
 
     val actionBar by threadSafeLazy { supportActionBar }

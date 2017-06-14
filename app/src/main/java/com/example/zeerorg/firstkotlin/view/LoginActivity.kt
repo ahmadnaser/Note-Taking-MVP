@@ -23,7 +23,7 @@ import com.parse.ParseUser
 /**
  * A login screen that offers login via email/password.
  */
-class LoginActivity() : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), LoginDependencyInterface {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -36,14 +36,11 @@ class LoginActivity() : AppCompatActivity() {
     val mLoginFormView by bind<View>(R.id.login_form)
     val fbLoginButton by bind<Button>(R.id.login_button)
 
-    val presenter: LoginPresenterInterface = LoginPresenter()
+    val presenter: LoginPresenterInterface = LoginPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if(presenter.checkLogin()) {
-            startNoteActivity()
-        }
+        presenter.checkLogin()
 
         setContentView(R.layout.activity_login)
 
@@ -65,12 +62,10 @@ class LoginActivity() : AppCompatActivity() {
                     Log.e("MyApp", "Uh oh. The user cancelled the Facebook login.")
                 } else if (user.isNew) {
                     Log.e("MyApp", "User signed up and logged in through Facebook!")
-                    val intent = Intent(this, NoteActivity::class.java)
-                    startActivity(intent)
+                    startNoteActivity()
                 } else {
                     Log.e("MyApp", "User logged in through Facebook!")
-                    val intent = Intent(this, NoteActivity::class.java)
-                    startActivity(intent)
+                    startNoteActivity()
                 }
             })
         }
@@ -81,103 +76,10 @@ class LoginActivity() : AppCompatActivity() {
         ParseFacebookUtils.onActivityResult(requestCode, resultCode, data)
     }
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private fun attemptLogin() {
-        if (mAuthTask) {
-            return
-        }
-
-        // Reset errors.
-        mEmailView.error = null
-        mPasswordView.error = null
-
-        // Store values at the time of the login attempt.
-        val email = mEmailView.text.toString()
-        val password = mPasswordView.text.toString()
-
-        var cancel = false
-        var focusView: View? = null
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.error = getString(R.string.error_invalid_password)
-            focusView = mPasswordView
-            cancel = true
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.error = getString(R.string.error_field_required)
-            focusView = mEmailView
-            cancel = true
-        } else if (!isEmailValid(email)) {
-            mEmailView.error = getString(R.string.error_invalid_email)
-            focusView = mEmailView
-            cancel = true
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView!!.requestFocus()
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true)
-            val user = ParseUser()
-            user.username = mEmailView.text.toString()
-            user.setPassword(mPasswordView.text.toString())
-            user.email = mEmailView.text.toString()
-            mAuthTask = true
-            Log.e("MyApp", "Trying log in")
-            user.signUpInBackground{ e ->
-                if (e == null) {
-                    val intent = Intent(this, NoteActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    Log.e("MyApp", e.code.toString() + " :: ")
-
-                    when (e.code) {
-                        ParseException.USERNAME_TAKEN -> {
-                            mEmailView.error = "This email exists"
-                        }// report error
-                        else -> {
-                            ParseUser.logInInBackground(mEmailView.text.toString(), mPasswordView.text.toString(), { user, _ ->
-                                if(user != null) {
-                                    val intent = Intent(this, NoteActivity::class.java)
-                                    startActivity(intent)
-                                } else {
-                                    showProgress(false)
-                                    Toast.makeText(this, "Something went wrong try again.", Toast.LENGTH_LONG).show()
-                                }
-                            })
-                        }
-                    }
-                    mAuthTask = false
-                }
-            }
-        }
-    }
-
-    private fun isEmailValid(email: String): Boolean {
-        //TODO: Replace this with your own logic
-        return email.contains("@")
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        //TODO: Replace this with your own logic
-        return password.length > 6
-    }
-
     /**
      * Shows the progress UI and hides the login form.
      */
-    private fun showProgress(show: Boolean) {
+    override fun showProgress(show: Boolean) {
         mProgressView.visibility = if (show) View.VISIBLE else View.GONE
         mLoginFormView.visibility = if (show) View.GONE else View.VISIBLE
     }
@@ -187,9 +89,17 @@ class LoginActivity() : AppCompatActivity() {
         return lazy(LazyThreadSafetyMode.NONE, {findViewById(idRes) as T} )
     }
 
-    private fun startNoteActivity(){
+    override fun startNoteActivity(){
         val intent = Intent(this, NoteActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun emailError(err: String) {
+        mEmailView.error = err
+    }
+
+    override fun passwordError(err: String) {
+        mPasswordView.error = err
     }
 }
 
