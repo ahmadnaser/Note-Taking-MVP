@@ -1,6 +1,7 @@
 package com.example.zeerorg.firstkotlin.model
 
 import android.util.Log
+import com.parse.ParseUser
 import com.raizlabs.android.dbflow.sql.language.Select
 
 /**
@@ -25,7 +26,4 @@ class NoteRepository : NoteRepositoryInterface {
         return note
     }
 
-    fun addNote(note: Note) {
-        // TODO : function to add a note
-    }
 }

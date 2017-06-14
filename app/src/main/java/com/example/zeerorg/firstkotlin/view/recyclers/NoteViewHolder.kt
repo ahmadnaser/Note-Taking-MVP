@@ -1,4 +1,4 @@
-package com.example.zeerorg.firstkotlin.view
+package com.example.zeerorg.firstkotlin.view.recyclers
 
 import android.support.v7.widget.RecyclerView
 import android.view.View

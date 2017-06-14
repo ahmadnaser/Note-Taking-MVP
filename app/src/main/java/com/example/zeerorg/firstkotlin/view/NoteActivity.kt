@@ -14,7 +14,8 @@ import android.widget.EditText
 import com.example.zeerorg.firstkotlin.R
 import com.example.zeerorg.firstkotlin.presenter.Presenter
 import com.example.zeerorg.firstkotlin.presenter.PresenterInterface
-import com.example.zeerorg.firstkotlin.presenter.PresenterUsingViewInterface
+import com.example.zeerorg.firstkotlin.presenter.PresenterUsingNoteViewInterface
+import com.example.zeerorg.firstkotlin.view.recyclers.NotesAdapter
 
 
 /**
@@ -23,17 +24,15 @@ import com.example.zeerorg.firstkotlin.presenter.PresenterUsingViewInterface
  *
  */
 
-class NoteActivity : AppCompatActivity(), NoteActivityInterface, PresenterUsingViewInterface {
+class NoteActivity : AppCompatActivity(), NoteActivityInterface, PresenterUsingNoteViewInterface {
 
-    //val actionBar by lazy(LazyThreadSafetyMode.NONE, { supportActionBar })
+
     val actionBar by threadSafeLazy { supportActionBar }
     val newNoteBtn by lazy(LazyThreadSafetyMode.NONE, { findViewById(R.id.new_note_btn) as FloatingActionButton }) // can be done how I've done with textView
     val recyclerView by bind<RecyclerView>(R.id.notes_recycler)
     val presenter: PresenterInterface = Presenter(this)  // Here goes my MVP architecture and testability
                                                         // This is why we use f***in Dagger
     val adapter = NotesAdapter(presenter.getNotesList())
-
-    //val items = NoteRepository.getListNotesItem()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

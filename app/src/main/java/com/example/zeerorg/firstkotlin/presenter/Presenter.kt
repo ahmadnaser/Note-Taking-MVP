@@ -9,7 +9,7 @@ import com.example.zeerorg.firstkotlin.model.NoteRepositoryInterface
  *
  * TODO : inject view in presenter view interface :: Actually NO! because it is a dependency and should not be given in a method
  */
-class Presenter(val view: PresenterUsingViewInterface, val noteRepo: NoteRepositoryInterface = NoteRepository()) : PresenterInterface {
+class Presenter(val view: PresenterUsingNoteViewInterface, val noteRepo: NoteRepositoryInterface = NoteRepository()) : PresenterInterface {
 
     private val notesList = noteRepo.getAll()
 
@@ -18,7 +18,6 @@ class Presenter(val view: PresenterUsingViewInterface, val noteRepo: NoteReposit
         noteRepo.pushNote(note)
         notesList.add(note)
 
-        // TODO("update recycler")
         view.updateRecycler()
     }
 
