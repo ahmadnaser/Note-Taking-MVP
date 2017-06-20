@@ -73,7 +73,7 @@
                 android:textStyle="bold" />
 
 
-            <Button
+            <!--<Button
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:layout_marginBottom="30dp"
                 android:background="@android:color/holo_blue_light"
                 android:text="Login with Facebook"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white"/> -->
 
         </LinearLayout>
     </ScrollView>

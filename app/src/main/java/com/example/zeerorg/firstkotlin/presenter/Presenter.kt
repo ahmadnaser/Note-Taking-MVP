@@ -1,8 +1,7 @@
 package com.example.zeerorg.firstkotlin.presenter
 
-import com.example.zeerorg.firstkotlin.model.Note
-import com.example.zeerorg.firstkotlin.model.NoteRepository
-import com.example.zeerorg.firstkotlin.model.NoteRepositoryInterface
+import android.util.Log
+import com.example.zeerorg.firstkotlin.model.*
 import com.example.zeerorg.firstkotlin.view.NoteDependencyInterface
 
 /**
@@ -10,14 +9,17 @@ import com.example.zeerorg.firstkotlin.view.NoteDependencyInterface
  *
  * TODO : inject view in presenter view interface :: Actually NO! because it is a dependency and should not be given in a method
  */
-class Presenter(val view: NoteDependencyInterface, val noteRepo: NoteRepositoryInterface = NoteRepository()) : PresenterInterface {
+class Presenter(val view: NoteDependencyInterface,
+                val noteRepo: NoteRepositoryInterface = NoteRepository(),
+                val noteOnlineRepo: ParseNoteRepoInterface = ParseNoteRepo()) : PresenterInterface {
 
-    private val notesList = noteRepo.getAll()
+    private var notesList = noteRepo.getAll()
 
     override fun addNote(data: String){
         val note = noteRepo.createNote(data)
         noteRepo.pushNote(note)
         notesList.add(note)
+        noteOnlineRepo.pushToBackend(note)
 
         view.updateRecycler()
     }
@@ -26,4 +28,44 @@ class Presenter(val view: NoteDependencyInterface, val noteRepo: NoteRepositoryI
         return notesList
     }
 
+    override fun startLoad() {
+        val notesNotUploaded : List<Note> = noteRepo.getNotUploaded()
+        for(note in notesNotUploaded) {
+            noteOnlineRepo.pushToBackend(note)
+        }
+        updateLocalNotes(mutableListOf(), 0)
+    }
+
+    /**
+     * Recursive asynchronous function
+     */
+    fun updateLocalNotes(latestNoteList: MutableList<Note>, skip: Int) {
+        noteOnlineRepo.getLatestNoteBackground(skip, { latestNote ->
+            if (!noteRepo.isPresent(latestNote)) {
+                Log.e("MyApp", "Note is not present locally")
+                latestNoteList.add(latestNote)
+                updateLocalNotes(latestNoteList, skip+1)
+            } else {
+                Log.e("MyApp", "Notes are present Locally :-)")
+                latestNoteList.reverse()
+                for(note in latestNoteList) {
+                    noteRepo.pushNote(note)
+                }
+                updateNoteList()
+            }
+        }, {
+            Log.e("MyApp", "Notes are present Locally :-)")     // same as in above
+            latestNoteList.reverse()
+            for(note in latestNoteList) {
+                noteRepo.pushNote(note)
+            }
+            updateNoteList()
+        })
+    }
+
+    fun updateNoteList() {
+        notesList.clear()
+        notesList.addAll(noteRepo.getAll())
+        view.updateRecycler()
+    }
 }

@@ -9,4 +9,6 @@ interface PresenterInterface {
     fun addNote(data: String)
 
     fun getNotesList() : MutableList<Note>
+
+    fun startLoad()
 }

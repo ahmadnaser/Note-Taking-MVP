@@ -16,19 +16,22 @@ class UserRepository : UserRepositoryInterface {
     override fun exists(email: String, login: () -> Unit, signUp: () -> Unit) {
         val userQuery: ParseQuery<ParseUser> = ParseUser.getQuery()
         userQuery.whereEqualTo("username", email)
-        userQuery.countInBackground{ _, err ->
-            if (err == null)  // No error, user exists
-                login()
-            else  // Error user needs to be created
-                signUp()
+        userQuery.countInBackground{ count, err ->
+            if (err == null)
+                if (count == 0)
+                    signUp()
+                else
+                    login()
         }
     }
 
     override fun login(email: String, password: String, successLogin: () -> Unit, failLogin: () -> Unit) {
-        ParseUser.logInInBackground(email, password, { user, _ ->
+        ParseUser.logInInBackground(email, password, { user, e ->
             if(user != null) {
+                Log.e("MyApp", "Login success")
                 successLogin()
             } else {
+                Log.e("MyApp", "Login fail " + e.toString())
                 failLogin()
             }
         })
@@ -41,10 +44,14 @@ class UserRepository : UserRepositoryInterface {
         user.email = email
         Log.e("MyApp", "Trying sign up")
         user.signUpInBackground { e ->
-            if(e == null)
+            if(e == null) {
+                Log.e("Signing Up", "Sign Up success")
                 successSignUp()
-            else
+            }
+            else {
+                Log.e("Signing Up", "Sign Up fail " + e.toString())
                 failSignUp()
+            }
         }
     }
 }

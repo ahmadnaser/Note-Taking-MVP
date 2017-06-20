@@ -19,11 +19,11 @@ import com.example.zeerorg.firstkotlin.view.recyclers.NotesAdapter
 
 /**
  *
- * No use of abstracting NoteActivityInterface but still I'm doing it idk why??
+ * No use of abstracting NoteActivityInterface but still I'm doing it idk why?? |||| UPDATE : Removed Note dependency Interface
  *
  */
 
-class NoteActivity : AppCompatActivity(), NoteActivityInterface, NoteDependencyInterface {
+class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
 
 
     val actionBar by threadSafeLazy { supportActionBar }
@@ -36,6 +36,8 @@ class NoteActivity : AppCompatActivity(), NoteActivityInterface, NoteDependencyI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        presenter.startLoad()
 
         actionBar?.title = "Notes"
         newNoteBtn.setOnClickListener {
@@ -52,7 +54,7 @@ class NoteActivity : AppCompatActivity(), NoteActivityInterface, NoteDependencyI
 //        fastAdapter.notifyAdapterDataSetChanged()
     }
 
-    override fun clickedFab() {
+    fun clickedFab() {
         val builder = AlertDialog.Builder(this)
         val input = EditText(this)
 
@@ -61,6 +63,10 @@ class NoteActivity : AppCompatActivity(), NoteActivityInterface, NoteDependencyI
         builder.setNegativeButton("Cancel", { dialog: DialogInterface, _: Int -> dialog.cancel()})
 
         builder.show()
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     override fun updateRecycler() {

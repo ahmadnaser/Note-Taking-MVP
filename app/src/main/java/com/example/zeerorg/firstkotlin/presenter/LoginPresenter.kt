@@ -1,5 +1,6 @@
 package com.example.zeerorg.firstkotlin.presenter
 
+import android.util.Log
 import com.example.zeerorg.firstkotlin.model.UserRepository
 import com.example.zeerorg.firstkotlin.model.UserRepositoryInterface
 import com.example.zeerorg.firstkotlin.view.LoginDependencyInterface
@@ -24,9 +25,11 @@ class LoginPresenter(val loginView: LoginDependencyInterface, val loginRepo: Use
         } else {
             loginRepo.exists(email,
                     {
+                        Log.e("myApp", "Login trying")
                         loginRepo.login(email, password, this::success, this::fail)
                     },
                     {
+                        Log.e("myApp", "Sign Up trying")
                         loginRepo.signUp(email, password, this::success, this::fail)
                     }
             )
@@ -34,10 +37,12 @@ class LoginPresenter(val loginView: LoginDependencyInterface, val loginRepo: Use
     }
 
     private fun success(){
+        Log.e("myApp", "Login success")
         loginView.startNoteActivity()
     }
 
     private fun fail() {
+        Log.e("myApp", "Login fail")
         loginView.showProgress(false)
     }
 }

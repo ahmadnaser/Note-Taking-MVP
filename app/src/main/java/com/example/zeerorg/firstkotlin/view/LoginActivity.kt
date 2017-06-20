@@ -3,7 +3,6 @@ package com.example.zeerorg.firstkotlin.view
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.view.inputmethod.EditorInfo
 
@@ -12,13 +11,9 @@ import com.example.zeerorg.firstkotlin.R
 import android.app.Activity
 import android.content.Intent
 import android.support.annotation.IdRes
-import android.util.Log
 import android.widget.*
 import com.example.zeerorg.firstkotlin.presenter.LoginPresenter
 import com.example.zeerorg.firstkotlin.presenter.LoginPresenterInterface
-import com.parse.ParseException
-import com.parse.ParseFacebookUtils
-import com.parse.ParseUser
 
 /**
  * A login screen that offers login via email/password.
@@ -27,15 +22,15 @@ class LoginActivity : AppCompatActivity(), LoginDependencyInterface {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private var mAuthTask: Boolean = false
 
     // UI references.
     val mEmailView by bind<AutoCompleteTextView>(R.id.email)
     val mPasswordView by bind<EditText>(R.id.password)
     val mProgressView by bind<View>(R.id.login_progress)
     val mLoginFormView by bind<View>(R.id.login_form)
-    val fbLoginButton by bind<Button>(R.id.login_button)
+    //val fbLoginButton by bind<Button>(R.id.login_button)
 
+    // Presenter
     val presenter: LoginPresenterInterface = LoginPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,24 +51,24 @@ class LoginActivity : AppCompatActivity(), LoginDependencyInterface {
         mEmailSignInButton.setOnClickListener { presenter.attemptLogin(mEmailView.text.toString(), mPasswordView.text.toString()) }
 
         //fbLoginButton.setReadPermissions(email)
-        fbLoginButton.setOnClickListener{
-            ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, { user: ParseUser?, _: ParseException ->
-                if (user == null) {
-                    Log.e("MyApp", "Uh oh. The user cancelled the Facebook login.")
-                } else if (user.isNew) {
-                    Log.e("MyApp", "User signed up and logged in through Facebook!")
-                    startNoteActivity()
-                } else {
-                    Log.e("MyApp", "User logged in through Facebook!")
-                    startNoteActivity()
-                }
-            })
-        }
+//        fbLoginButton.setOnClickListener{
+//            ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, { user, _ ->
+//                if (user == null) {
+//                    Log.e("MyApp", "Uh oh. The user cancelled the Facebook login.")
+//                } else if (user.isNew) {
+//                    Log.e("MyApp", "User signed up and logged in through Facebook!")
+//                    startNoteActivity()
+//                } else {
+//                    Log.e("MyApp", "User logged in through Facebook!")
+//                    startNoteActivity()
+//                }
+//            })
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data)
+        //ParseFacebookUtils.onActivityResult(requestCode, resultCode, data)
     }
 
     /**
@@ -91,6 +86,7 @@ class LoginActivity : AppCompatActivity(), LoginDependencyInterface {
 
     override fun startNoteActivity(){
         val intent = Intent(this, NoteActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
     }
 
