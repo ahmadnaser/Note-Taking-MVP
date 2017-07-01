@@ -16,6 +16,9 @@ class Presenter(val view: NoteDependencyInterface,
     private var notesList = noteRepo.getAll()
 
     override fun addNote(data: String){
+        if(data.trim() == "") {
+            return
+        }
         val note = noteRepo.createNote(data)
         noteRepo.pushNote(note)
         notesList.add(note)
@@ -28,6 +31,10 @@ class Presenter(val view: NoteDependencyInterface,
         return notesList
     }
 
+    /**
+     * First I upload the notes which haven't been uploaded.
+     * Then I download the notes from parse
+     */
     override fun startLoad() {
         val notesNotUploaded : List<Note> = noteRepo.getNotUploaded()
         for(note in notesNotUploaded) {
@@ -47,7 +54,6 @@ class Presenter(val view: NoteDependencyInterface,
                 updateLocalNotes(latestNoteList, skip+1)
             } else {
                 Log.e("MyApp", "Notes are present Locally :-)")
-                latestNoteList.reverse()
                 for(note in latestNoteList) {
                     noteRepo.pushNote(note)
                 }
@@ -55,7 +61,6 @@ class Presenter(val view: NoteDependencyInterface,
             }
         }, {
             Log.e("MyApp", "Notes are present Locally :-)")     // same as in above
-            latestNoteList.reverse()
             for(note in latestNoteList) {
                 noteRepo.pushNote(note)
             }

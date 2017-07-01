@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:text="Hello World"
+        android:text="@string/hello_world"
         android:id="@+id/note_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

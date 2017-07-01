@@ -2,7 +2,6 @@ package com.example.zeerorg.firstkotlin.main
 
 import android.app.Application
 import com.parse.Parse
-import com.parse.ParseFacebookUtils
 import io.realm.Realm
 
 /**
@@ -13,7 +12,6 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Parse.initialize(this)
-        ParseFacebookUtils.initialize(this)
         Realm.init(this)
     }
 

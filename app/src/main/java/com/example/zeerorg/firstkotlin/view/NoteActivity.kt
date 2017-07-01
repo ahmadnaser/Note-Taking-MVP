@@ -2,7 +2,6 @@ package com.example.zeerorg.firstkotlin.view
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.IdRes
@@ -31,7 +30,7 @@ class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
     val recyclerView by bind<RecyclerView>(R.id.notes_recycler)
     val presenter: PresenterInterface = Presenter(this)  // Here goes my MVP architecture and testability
                                                         // This is why we use f***in Dagger
-    val adapter = NotesAdapter(presenter.getNotesList())
+    val adapter = NotesAdapter(presenter.getNotesList().asReversed())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +58,8 @@ class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
         val input = EditText(this)
 
         builder.setView(input)
-        builder.setPositiveButton("Create", { _: DialogInterface, _: Int -> presenter.addNote(input.text.toString()) })
-        builder.setNegativeButton("Cancel", { dialog: DialogInterface, _: Int -> dialog.cancel()})
+        builder.setPositiveButton("Create", { _, _ -> presenter.addNote(input.text.toString()) })
+        builder.setNegativeButton("Cancel", { dialog, _ -> dialog.cancel()})
 
         builder.show()
     }

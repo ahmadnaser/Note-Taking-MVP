@@ -30,6 +30,7 @@ class NoteRepository : NoteRepositoryInterface {
         val note =  Note()
         note.data = data
         note.id = UUID.randomUUID().hashCode()
+        note.uploaded = false
         return note
     }
 
