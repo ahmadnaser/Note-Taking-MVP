@@ -10,13 +10,28 @@ import com.parse.ParseQuery
  */
 class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) : ParseNoteRepoInterface {
 
+    override fun updateBackend(note: Note) {
+        val query = ParseQuery.getQuery<ParseObject>("Note")
+        query.getInBackground(note.objectId,
+                { obj, _ ->
+                    obj.put("data", note.data)
+                    obj.put("timestamp", note.timestamp)
+                    obj.saveInBackground{
+                        localRepo.hasBeenUpdated(note)
+                    }
+                }
+        )
+    }
+
     override fun pushToBackend(note: Note) {
         val noteObject = ParseObject("Note")
         noteObject.put("user", ParseUser.getCurrentUser().username)
         noteObject.put("id", note.id)
         noteObject.put("data", note.data)
+        noteObject.put("timestamp", note.timestamp)
         noteObject.saveInBackground{
             localRepo.setUploaded(note.id, true)
+            localRepo.setObjectId(note.id, noteObject.objectId)
         }
     }
 
@@ -37,9 +52,11 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
 
     fun toLocalNote(parseNote: ParseObject) : Note {
         val note = Note()
-        note.id = parseNote.getInt("id")
+        note.objectId = parseNote.objectId
+        note.id = parseNote.getLong("id")
         note.data = parseNote.getString("data")
         note.uploaded = true
+        note.timestamp = parseNote.getLong("timestamp")
         return note
     }
 }

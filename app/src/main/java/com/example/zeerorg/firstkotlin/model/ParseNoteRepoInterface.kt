@@ -7,4 +7,6 @@ interface ParseNoteRepoInterface {
     fun pushToBackend(note: Note)
 
     fun getLatestNoteBackground(skip : Int, latestNoteCallback: (note: Note) -> Unit, finalCallback: () -> Unit)
+
+    fun updateBackend(note: Note)
 }

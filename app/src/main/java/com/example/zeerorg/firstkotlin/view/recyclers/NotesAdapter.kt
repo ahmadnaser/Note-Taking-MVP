@@ -11,7 +11,7 @@ import com.example.zeerorg.firstkotlin.model.Note
  *
  * TODO : here I am using Notes as raw in onBindViewHolder find a way to abstract this so that view and model are not bound
  */
-class NotesAdapter(val notesList: MutableList<Note>) : RecyclerView.Adapter<NoteViewHolder>() {
+class NotesAdapter(val notesList: MutableList<Note>, val editNote: (org: Note) -> Unit) : RecyclerView.Adapter<NoteViewHolder>() {
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
@@ -19,10 +19,15 @@ class NotesAdapter(val notesList: MutableList<Note>) : RecyclerView.Adapter<Note
     }
 
     override fun onCreateViewHolder(view: ViewGroup, position: Int): NoteViewHolder {
-        return NoteViewHolder(
-                LayoutInflater.from(view.context).inflate(R.layout.note_item, view, false)
+
+        val noteViewHolder = NoteViewHolder(
+            LayoutInflater.from(view.context).inflate(R.layout.note_item, view, false),
+            {
+                editNote(notesList[position])
+            }
         )
-    }
+        return noteViewHolder
+        }
 
     override fun getItemCount(): Int {
         return notesList.size

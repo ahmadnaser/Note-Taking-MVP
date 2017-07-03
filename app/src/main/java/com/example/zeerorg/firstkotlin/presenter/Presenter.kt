@@ -13,6 +13,16 @@ class Presenter(val view: NoteDependencyInterface,
                 val noteRepo: NoteRepositoryInterface = NoteRepository(),
                 val noteOnlineRepo: ParseNoteRepoInterface = ParseNoteRepo()) : PresenterInterface {
 
+    override fun updateNote(note: Note, newData: String) {
+        if(newData.trim() != note.data) {
+            note.data = newData
+            note.timestamp = System.currentTimeMillis()
+            noteRepo.updateNote(note)
+            noteOnlineRepo.updateBackend(note)
+            view.updateRecycler()
+        }
+    }
+
     private var notesList = noteRepo.getAll()
 
     override fun addNote(data: String){
@@ -45,6 +55,12 @@ class Presenter(val view: NoteDependencyInterface,
 
     /**
      * Recursive asynchronous function
+     *
+     * It fetches the latest note in background
+     * Checks if that note is present in local repo
+     *      if not : It adds the note to a list which will be updated afterwards
+     *
+     *      if yes : It stops and adds all the notes present in latestNoteList to local repo
      */
     fun updateLocalNotes(latestNoteList: MutableList<Note>, skip: Int) {
         noteOnlineRepo.getLatestNoteBackground(skip, { latestNote ->

@@ -10,9 +10,15 @@ interface NoteRepositoryInterface {
 
     fun getAll() : MutableList<Note>
 
-    fun setUploaded(id : Int, value: Boolean)
+    fun setUploaded(id : Long, value : Boolean)
+
+    fun setObjectId(id : Long, value : String)
 
     fun getNotUploaded() : List<Note>
 
     fun isPresent(note: Note) : Boolean
+
+    fun updateNote(note: Note)
+
+    fun hasBeenUpdated(note: Note)
 }

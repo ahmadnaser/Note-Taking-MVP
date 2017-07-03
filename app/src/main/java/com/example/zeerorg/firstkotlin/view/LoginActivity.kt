@@ -1,7 +1,5 @@
 package com.example.zeerorg.firstkotlin.view
 
-import android.support.v7.app.AppCompatActivity
-
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -18,7 +16,7 @@ import com.example.zeerorg.firstkotlin.presenter.LoginPresenterInterface
 /**
  * A login screen that offers login via email/password.
  */
-class LoginActivity : AppCompatActivity(), LoginDependencyInterface {
+class LoginActivity : Activity(), LoginDependencyInterface {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
