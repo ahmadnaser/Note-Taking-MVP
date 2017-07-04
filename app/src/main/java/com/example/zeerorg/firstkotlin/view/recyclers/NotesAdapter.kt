@@ -1,6 +1,7 @@
 package com.example.zeerorg.firstkotlin.view.recyclers
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.example.zeerorg.firstkotlin.R
@@ -16,18 +17,17 @@ class NotesAdapter(val notesList: MutableList<Note>, val editNote: (org: Note) -
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
         holder.data.text = note.data
+        holder.mainView.setOnClickListener {
+            Log.e("Adapter", position.toString())
+            editNote(notesList[position])
+        }
     }
 
     override fun onCreateViewHolder(view: ViewGroup, position: Int): NoteViewHolder {
 
-        val noteViewHolder = NoteViewHolder(
-            LayoutInflater.from(view.context).inflate(R.layout.note_item, view, false),
-            {
-                editNote(notesList[position])
-            }
-        )
+        val noteViewHolder = NoteViewHolder(LayoutInflater.from(view.context).inflate(R.layout.note_item, view, false))
         return noteViewHolder
-        }
+    }
 
     override fun getItemCount(): Int {
         return notesList.size

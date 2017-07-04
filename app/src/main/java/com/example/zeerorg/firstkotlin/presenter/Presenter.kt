@@ -1,6 +1,8 @@
 package com.example.zeerorg.firstkotlin.presenter
 
 import android.util.Log
+import com.example.zeerorg.firstkotlin.main.HelperMethods
+import com.example.zeerorg.firstkotlin.main.HelperMethodsInterface
 import com.example.zeerorg.firstkotlin.model.*
 import com.example.zeerorg.firstkotlin.view.NoteDependencyInterface
 
@@ -11,19 +13,31 @@ import com.example.zeerorg.firstkotlin.view.NoteDependencyInterface
  */
 class Presenter(val view: NoteDependencyInterface,
                 val noteRepo: NoteRepositoryInterface = NoteRepository(),
-                val noteOnlineRepo: ParseNoteRepoInterface = ParseNoteRepo()) : PresenterInterface {
+                val noteOnlineRepo: ParseNoteRepoInterface = ParseNoteRepo(),
+                val helpers: HelperMethodsInterface = HelperMethods(),
+                val fileLog: FileLogInterface = FileLog(view.getFileDirectory())) : PresenterInterface {
+
+    lateinit private var notesList : MutableList<Note>
 
     override fun updateNote(note: Note, newData: String) {
         if(newData.trim() != note.data) {
             note.data = newData
             note.timestamp = System.currentTimeMillis()
             noteRepo.updateNote(note)
-            noteOnlineRepo.updateBackend(note)
+            helpers.checkOnline(
+                    {
+                        noteOnlineRepo.updateBackend(note)
+                        executeLoggedData()
+                        Log.e("presenter", "updated online")
+                    },
+                    {
+                        fileLog.logUpdateNote(note.id)
+                        Log.e("presenter", "Not online")
+                    }
+            )
             view.updateRecycler()
         }
     }
-
-    private var notesList = noteRepo.getAll()
 
     override fun addNote(data: String){
         if(data.trim() == "") {
@@ -32,8 +46,17 @@ class Presenter(val view: NoteDependencyInterface,
         val note = noteRepo.createNote(data)
         noteRepo.pushNote(note)
         notesList.add(note)
-        noteOnlineRepo.pushToBackend(note)
-
+        helpers.checkOnline(
+                {
+                    noteOnlineRepo.pushToBackend(note)
+                    executeLoggedData()
+                    Log.e("presenter", "pushed online")
+                },
+                {
+                    fileLog.logCreateNote(note.id)
+                    Log.e("presenter", "NOt online")
+                }
+        )
         view.updateRecycler()
     }
 
@@ -46,11 +69,24 @@ class Presenter(val view: NoteDependencyInterface,
      * Then I download the notes from parse
      */
     override fun startLoad() {
-        val notesNotUploaded : List<Note> = noteRepo.getNotUploaded()
-        for(note in notesNotUploaded) {
-            noteOnlineRepo.pushToBackend(note)
-        }
-        updateLocalNotes(mutableListOf(), 0)
+        // Removed uploading of not uploaded notes
+        notesList = mutableListOf()
+        helpers.checkOnline(
+                {
+                    executeLoggedData()
+                    noteOnlineRepo.getAllNotes { listNote ->
+                        notesList.clear()
+                        notesList.addAll(listNote)
+                        view.updateRecycler()
+                    }
+                },
+                {
+                    notesList.clear()
+                    notesList.addAll(noteRepo.getAll())
+                    view.updateRecycler()
+                    Log.e("presenter", "Continue with offline database")
+                }
+        )
     }
 
     /**
@@ -63,30 +99,50 @@ class Presenter(val view: NoteDependencyInterface,
      *      if yes : It stops and adds all the notes present in latestNoteList to local repo
      */
     fun updateLocalNotes(latestNoteList: MutableList<Note>, skip: Int) {
-        noteOnlineRepo.getLatestNoteBackground(skip, { latestNote ->
-            if (!noteRepo.isPresent(latestNote)) {
-                Log.e("MyApp", "Note is not present locally")
-                latestNoteList.add(latestNote)
-                updateLocalNotes(latestNoteList, skip+1)
-            } else {
-                Log.e("MyApp", "Notes are present Locally :-)")
-                for(note in latestNoteList) {
-                    noteRepo.pushNote(note)
-                }
-                updateNoteList()
-            }
-        }, {
-            Log.e("MyApp", "Notes are present Locally :-)")     // same as in above
-            for(note in latestNoteList) {
-                noteRepo.pushNote(note)
-            }
-            updateNoteList()
-        })
+//        noteOnlineRepo.getLatestNoteBackground(skip, { latestNote ->
+//            if (!noteRepo.isPresent(latestNote)) {
+//                Log.e("MyApp", "Note is not present locally")
+//                latestNoteList.add(latestNote)
+//                updateLocalNotes(latestNoteList, skip+1)
+//            } else {
+//                Log.e("MyApp", "Notes are present Locally :-)")
+//                for(note in latestNoteList) {
+//                    noteRepo.pushNote(note)
+//                }
+//                updateNoteList()
+//            }
+//        }, {
+//            Log.e("MyApp", "Notes are present Locally :-)")     // same as in above
+//            for(note in latestNoteList) {
+//                noteRepo.pushNote(note)
+//            }
+//            updateNoteList()
+//        })
+        executeLoggedData()
+        noteOnlineRepo.getAllNotes { listNote ->
+            notesList.clear()
+            notesList.addAll(listNote)
+            view.updateRecycler()
+        }
     }
 
     fun updateNoteList() {
         notesList.clear()
         notesList.addAll(noteRepo.getAll())
         view.updateRecycler()
+    }
+
+    fun executeLoggedData(){
+        Log.e("Presenter","Executing Log")
+        fileLog.executeLog(
+                { id ->
+                    noteOnlineRepo.pushToBackend(noteRepo.getNote(id))
+                },
+                { id ->
+                    noteOnlineRepo.updateBackend(noteRepo.getNote(id))
+                },
+                {
+
+                })
     }
 }

@@ -26,7 +26,6 @@ class LoginActivity : Activity(), LoginDependencyInterface {
     val mPasswordView by bind<EditText>(R.id.password)
     val mProgressView by bind<View>(R.id.login_progress)
     val mLoginFormView by bind<View>(R.id.login_form)
-    //val fbLoginButton by bind<Button>(R.id.login_button)
 
     // Presenter
     val presenter: LoginPresenterInterface = LoginPresenter(this)
@@ -47,26 +46,10 @@ class LoginActivity : Activity(), LoginDependencyInterface {
 
         val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
         mEmailSignInButton.setOnClickListener { presenter.attemptLogin(mEmailView.text.toString(), mPasswordView.text.toString()) }
-
-        //fbLoginButton.setReadPermissions(email)
-//        fbLoginButton.setOnClickListener{
-//            ParseFacebookUtils.logInWithReadPermissionsInBackground(this, null, { user, _ ->
-//                if (user == null) {
-//                    Log.e("MyApp", "Uh oh. The user cancelled the Facebook login.")
-//                } else if (user.isNew) {
-//                    Log.e("MyApp", "User signed up and logged in through Facebook!")
-//                    startNoteActivity()
-//                } else {
-//                    Log.e("MyApp", "User logged in through Facebook!")
-//                    startNoteActivity()
-//                }
-//            })
-//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        //ParseFacebookUtils.onActivityResult(requestCode, resultCode, data)
     }
 
     /**

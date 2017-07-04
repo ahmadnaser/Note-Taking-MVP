@@ -7,4 +7,6 @@ package com.example.zeerorg.firstkotlin.view
  */
 interface NoteDependencyInterface {
     fun updateRecycler()
+
+    fun getFileDirectory() : String
 }

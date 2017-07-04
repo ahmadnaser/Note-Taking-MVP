@@ -13,11 +13,15 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
     override fun updateBackend(note: Note) {
         val query = ParseQuery.getQuery<ParseObject>("Note")
         query.getInBackground(note.objectId,
-                { obj, _ ->
-                    obj.put("data", note.data)
-                    obj.put("timestamp", note.timestamp)
-                    obj.saveInBackground{
-                        localRepo.hasBeenUpdated(note)
+                { obj, e ->
+                    if(e == null) {
+                        obj.put("data", note.data)
+                        obj.put("timestamp", note.timestamp)
+                        obj.saveInBackground {
+                            localRepo.hasBeenUpdated(note)
+                        }
+                    } else {
+                        pushToBackend(note)
                     }
                 }
         )
@@ -46,6 +50,21 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
             } else {
                 Log.e("MyApp", "Problem in fetching latest Note")
                 finalCallback()
+            }
+        }
+    }
+
+    override fun getAllNotes(callback: (listNote: MutableList<Note>) -> Unit) {
+        val query = ParseQuery.getQuery<ParseObject>("Note")
+        query.whereEqualTo("user", ParseUser.getCurrentUser().username)
+        query.orderByAscending("id")
+        query.findInBackground{ listObj, e ->
+            if(e == null) {
+                val listNote = mutableListOf<Note>()
+                listObj.mapTo(listNote) { toLocalNote(it) }
+                callback(listNote)
+            } else {
+                e.printStackTrace()
             }
         }
     }

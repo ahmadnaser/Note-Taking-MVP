@@ -9,4 +9,6 @@ interface ParseNoteRepoInterface {
     fun getLatestNoteBackground(skip : Int, latestNoteCallback: (note: Note) -> Unit, finalCallback: () -> Unit)
 
     fun updateBackend(note: Note)
+
+    fun getAllNotes(callback: (listNote: MutableList<Note>) -> Unit)
 }

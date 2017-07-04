@@ -2,6 +2,7 @@ package com.example.zeerorg.firstkotlin.view
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v7.widget.LinearLayoutManager
@@ -27,16 +28,29 @@ class NoteActivity : Activity(), NoteDependencyInterface {
 
     val recyclerView by bind<RecyclerView>(R.id.notes_recycler)
     val newNoteBtn by lazy(LazyThreadSafetyMode.NONE, { findViewById(R.id.new_note_btn) as Button })
-    val presenter: PresenterInterface = Presenter(this)  // Here goes my MVP architecture and testability
+    lateinit var presenter : PresenterInterface// Here goes my MVP architecture and testability
                                                         // This is why we use f***in Dagger
-    val adapter = NotesAdapter(presenter.getNotesList().asReversed(), this::editNote)
+    lateinit var adapter: NotesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        presenter = Presenter(this)
         presenter.startLoad()
 
+        adapter = NotesAdapter(presenter.getNotesList().asReversed(), { org ->
+            val builder = AlertDialog.Builder(this)
+            val input = EditText(this)
+            Log.e("Activty", org.data)
+
+            input.setText(org.data)
+            builder.setView(input)
+            builder.setPositiveButton("Update", { _, _ -> presenter.updateNote(org, input.text.toString()) })
+            builder.setNegativeButton("Cancel", { dialog, _ -> dialog.cancel()})
+
+            builder.show()
+        })
         actionBar.title = "Notes"
 
         recyclerView.adapter = adapter
@@ -56,6 +70,7 @@ class NoteActivity : Activity(), NoteDependencyInterface {
     private fun editNote(org: Note) : Unit {
         val builder = AlertDialog.Builder(this)
         val input = EditText(this)
+        Log.e("Activty", org.data)
 
         input.setText(org.data)
         builder.setView(input)
@@ -82,6 +97,11 @@ class NoteActivity : Activity(), NoteDependencyInterface {
 
     override fun updateRecycler() {
         adapter.notifyDataSetChanged()
+    }
+
+    override fun getFileDirectory(): String {
+        Log.e("Activity", this.filesDir.absolutePath)
+        return this.filesDir.absolutePath
     }
 
     fun <T : View> Activity.bind(@IdRes idRes: Int): Lazy<T> {

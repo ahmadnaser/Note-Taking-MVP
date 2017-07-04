@@ -68,4 +68,8 @@ class NoteRepository(daoSession: DaoSession = MyApplication.daoSession) : NoteRe
         }
         return false
     }
+
+    override fun getNote(id: Long) : Note {
+        return noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique()
+    }
 }

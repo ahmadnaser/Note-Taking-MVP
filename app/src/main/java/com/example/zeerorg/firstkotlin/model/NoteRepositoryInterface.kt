@@ -21,4 +21,6 @@ interface NoteRepositoryInterface {
     fun updateNote(note: Note)
 
     fun hasBeenUpdated(note: Note)
+
+    fun getNote(id: Long) : Note
 }
