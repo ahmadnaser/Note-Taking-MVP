@@ -12,7 +12,9 @@ import com.company.zeerorg.mynotes.model.Note
  *
  * TODO : here I am using Notes as raw in onBindViewHolder find a way to abstract this so that view and model are not bound
  */
-class NotesAdapter(val notesList: MutableList<Note>, val editNote: (org: Note) -> Unit) : RecyclerView.Adapter<NoteViewHolder>() {
+class NotesAdapter(val notesList: MutableList<Note>,
+                   val editNote: (org: Note) -> Unit,
+                   val delNote: (org: Note) -> Unit) : RecyclerView.Adapter<NoteViewHolder>() {
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
@@ -31,5 +33,9 @@ class NotesAdapter(val notesList: MutableList<Note>, val editNote: (org: Note) -
 
     override fun getItemCount(): Int {
         return notesList.size
+    }
+
+    fun onDismiss(position: Int) {
+        delNote(notesList[position])
     }
 }

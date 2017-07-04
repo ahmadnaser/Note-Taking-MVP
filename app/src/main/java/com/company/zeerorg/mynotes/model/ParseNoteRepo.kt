@@ -69,6 +69,24 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
         }
     }
 
+    override fun pullNote(note: Note) {
+        val query = ParseQuery.getQuery<ParseObject>("Note")
+        query.getInBackground(note.objectId, { obj, e ->
+            if(e == null)
+                obj.deleteInBackground()
+        })
+    }
+
+    override fun pullNote(id: Long) {
+        val query = ParseQuery.getQuery<ParseObject>("Note")
+        query.whereEqualTo("user", ParseUser.getCurrentUser().username)
+        query.whereEqualTo("id", id)
+        query.getFirstInBackground{ obj, e ->
+            if(e == null)
+                obj.deleteInBackground()
+        }
+    }
+
     fun toLocalNote(parseNote: ParseObject) : Note {
         val note = Note()
         note.objectId = parseNote.objectId

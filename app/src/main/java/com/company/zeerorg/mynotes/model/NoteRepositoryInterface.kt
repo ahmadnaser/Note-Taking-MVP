@@ -23,4 +23,10 @@ interface NoteRepositoryInterface {
     fun hasBeenUpdated(note: Note)
 
     fun getNote(id: Long) : Note
+
+    fun deleteNote(note: Note)
+
+    fun setAll(noteList: MutableList<Note>)
+
+    fun clearAll()
 }

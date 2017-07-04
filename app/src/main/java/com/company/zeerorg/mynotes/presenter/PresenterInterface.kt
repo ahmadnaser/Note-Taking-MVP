@@ -13,4 +13,6 @@ interface PresenterInterface {
     fun startLoad()
 
     fun updateNote(note: Note, newData: String)
+
+    fun deleteNote(note: Note)
 }

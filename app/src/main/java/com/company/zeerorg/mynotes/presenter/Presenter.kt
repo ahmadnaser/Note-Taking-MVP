@@ -17,7 +17,7 @@ class Presenter(val view: NoteDependencyInterface,
                 val helpers: HelperMethodsInterface = HelperMethods(),
                 val fileLog: FileLogInterface = FileLog(view.getFileDirectory())) : PresenterInterface {
 
-    lateinit private var notesList : MutableList<Note>
+    private var notesList : MutableList<Note> = mutableListOf()
 
     override fun updateNote(note: Note, newData: String) {
         if(newData.trim() != note.data) {
@@ -70,14 +70,17 @@ class Presenter(val view: NoteDependencyInterface,
      */
     override fun startLoad() {
         // Removed uploading of not uploaded notes
-        notesList = mutableListOf()
+        notesList.clear()
         helpers.checkOnline(
                 {
                     executeLoggedData()
                     noteOnlineRepo.getAllNotes { listNote ->
+                        Log.e("Presenter", "Updating from Backend")
                         notesList.clear()
                         notesList.addAll(listNote)
                         view.updateRecycler()
+                        noteRepo.clearAll()
+                        noteRepo.setAll(listNote)
                     }
                 },
                 {
@@ -89,47 +92,22 @@ class Presenter(val view: NoteDependencyInterface,
         )
     }
 
-    /**
-     * Recursive asynchronous function
-     *
-     * It fetches the latest note in background
-     * Checks if that note is present in local repo
-     *      if not : It adds the note to a list which will be updated afterwards
-     *
-     *      if yes : It stops and adds all the notes present in latestNoteList to local repo
-     */
-    fun updateLocalNotes(latestNoteList: MutableList<Note>, skip: Int) {
-//        noteOnlineRepo.getLatestNoteBackground(skip, { latestNote ->
-//            if (!noteRepo.isPresent(latestNote)) {
-//                Log.e("MyApp", "Note is not present locally")
-//                latestNoteList.add(latestNote)
-//                updateLocalNotes(latestNoteList, skip+1)
-//            } else {
-//                Log.e("MyApp", "Notes are present Locally :-)")
-//                for(note in latestNoteList) {
-//                    noteRepo.pushNote(note)
-//                }
-//                updateNoteList()
-//            }
-//        }, {
-//            Log.e("MyApp", "Notes are present Locally :-)")     // same as in above
-//            for(note in latestNoteList) {
-//                noteRepo.pushNote(note)
-//            }
-//            updateNoteList()
-//        })
-        executeLoggedData()
-        noteOnlineRepo.getAllNotes { listNote ->
-            notesList.clear()
-            notesList.addAll(listNote)
-            view.updateRecycler()
-        }
-    }
+    override fun deleteNote(note: Note) {
+        noteRepo.deleteNote(note)
 
-    fun updateNoteList() {
-        notesList.clear()
-        notesList.addAll(noteRepo.getAll())
-        view.updateRecycler()
+        helpers.checkOnline(
+                {
+                    noteOnlineRepo.pullNote(note)
+                    notesList.remove(note)
+                    view.updateRecycler()
+                    executeLoggedData()
+                },
+                {
+                    fileLog.logDeleteNote(note.id)
+                    notesList.remove(note)
+                    view.updateRecycler()
+                }
+        )
     }
 
     fun executeLoggedData(){
@@ -141,8 +119,9 @@ class Presenter(val view: NoteDependencyInterface,
                 { id ->
                     noteOnlineRepo.updateBackend(noteRepo.getNote(id))
                 },
-                {
-
-                })
+                { id ->
+                    noteOnlineRepo.pullNote(id)   // Since note is deleted from local repository I will use the ID
+                }
+        )
     }
 }

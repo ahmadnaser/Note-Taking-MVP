@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -15,6 +16,7 @@ import com.company.zeerorg.mynotes.model.Note
 import com.company.zeerorg.mynotes.presenter.Presenter
 import com.company.zeerorg.mynotes.presenter.PresenterInterface
 import com.company.zeerorg.mynotes.view.recyclers.NotesAdapter
+import com.company.zeerorg.mynotes.view.recyclers.TouchHelper
 
 
 /**
@@ -38,18 +40,7 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         presenter = Presenter(this)
         presenter.startLoad()
 
-        adapter = NotesAdapter(presenter.getNotesList().asReversed(), { org ->
-            val builder = AlertDialog.Builder(this)
-            val input = EditText(this)
-            Log.e("Activty", org.data)
-
-            input.setText(org.data)
-            builder.setView(input)
-            builder.setPositiveButton("Update", { _, _ -> presenter.updateNote(org, input.text.toString()) })
-            builder.setNegativeButton("Cancel", { dialog, _ -> dialog.cancel()})
-
-            builder.show()
-        })
+        adapter = NotesAdapter(presenter.getNotesList().asReversed(), this::editNote, this::delNote)
         actionBar.title = "Notes"
 
         recyclerView.adapter = adapter
@@ -59,6 +50,11 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         newNoteBtn.setOnClickListener{
             clickedFab()
         }
+
+        val itemTouch = TouchHelper(adapter)
+        val itemTouchHelper = ItemTouchHelper(itemTouch)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
 
 //        recyclerView.adapter = fastAdapter
 //        recyclerView.layoutManager = LinearLayoutManager(this)
@@ -77,6 +73,10 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         builder.setNegativeButton("Cancel", { dialog, _ -> dialog.cancel()})
 
         builder.show()
+    }
+
+    private fun delNote(org: Note) : Unit {
+        presenter.deleteNote(org)
     }
 
     private fun clickedFab() {

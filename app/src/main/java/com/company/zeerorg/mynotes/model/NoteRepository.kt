@@ -1,5 +1,6 @@
 package com.company.zeerorg.mynotes.model
 
+import android.util.Log
 import com.company.zeerorg.mynotes.main.MyApplication
 
 /**
@@ -69,5 +70,19 @@ class NoteRepository(daoSession: DaoSession = MyApplication.daoSession) : NoteRe
 
     override fun getNote(id: Long) : Note {
         return noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique()
+    }
+
+    override fun deleteNote(note: Note) {
+        Log.e("Local repo", note.id.toString())
+        val toDelete = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(note.id)).unique()
+        noteDao.delete(toDelete)
+    }
+
+    override fun setAll(noteList: MutableList<Note>) {
+        noteDao.insertInTx(noteList)
+    }
+
+    override fun clearAll() {
+        noteDao.deleteAll()
     }
 }

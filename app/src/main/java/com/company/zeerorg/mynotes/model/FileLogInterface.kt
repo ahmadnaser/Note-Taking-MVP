@@ -10,4 +10,6 @@ interface FileLogInterface {
     fun logUpdateNote(id: Long)
 
     fun executeLog(createFun: (id: Long) -> Unit, updateFun: (id: Long) -> Unit, deleteFun: (id: Long) -> Unit)
+
+    fun logDeleteNote(id: Long)
 }

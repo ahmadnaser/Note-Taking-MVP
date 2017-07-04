@@ -11,4 +11,8 @@ interface ParseNoteRepoInterface {
     fun updateBackend(note: Note)
 
     fun getAllNotes(callback: (listNote: MutableList<Note>) -> Unit)
+
+    fun pullNote(note: Note)
+
+    fun pullNote(id: Long)
 }

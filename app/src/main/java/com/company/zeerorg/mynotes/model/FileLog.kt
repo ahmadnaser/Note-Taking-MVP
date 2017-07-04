@@ -48,6 +48,33 @@ class FileLog(val dir: String) : FileLogInterface {
         fos.close()
     }
 
+    override fun logDeleteNote(id: Long) {
+        editted = true
+        val file = File(dir, FILENAME)
+        val fileData = ""
+
+        if(file.exists()) {
+            val inputStreamReader = InputStreamReader(FileInputStream(file))
+            val bufferedReader = BufferedReader(inputStreamReader)
+            var receiveString = bufferedReader.readLine()
+            while (receiveString != null) {
+                receiveString.trim()
+                if (!receiveString.contains(id.toString())) {
+                    fileData.plus(receiveString)
+                    fileData.plus("\n")
+                }
+                receiveString = bufferedReader.readLine()
+            }
+            bufferedReader.close()
+            inputStreamReader.close()
+        }
+
+        val fos = OutputStreamWriter(FileOutputStream(file, true))
+        fos.write(fileData)
+        fos.write("DELETE " + id.toString() + "\n")
+        fos.close()
+    }
+
     override fun executeLog(createFun: (id: Long) -> Unit, updateFun: (id: Long) -> Unit, deleteFun: (id: Long) -> Unit) {
 
         val file = File(dir, FILENAME)
