@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.zeerorg.firstkotlin.view.NoteActivity">
+    tools:context="com.company.zeerorg.mynotes.view.NoteActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notes_recycler"

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zeerorg.firstkotlin">
+    package="com.company.zeerorg.mynotes">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".main.MyApplication"
+        android:name="com.company.zeerorg.mynotes.main.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,7 +21,7 @@
             android:name="com.parse.APPLICATION_ID"
             android:value="@string/parse_app_id" />
 
-        <activity android:name=".view.LoginActivity"
+        <activity android:name="com.company.zeerorg.mynotes.view.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.NoteActivity"
+            android:name="com.company.zeerorg.mynotes.view.NoteActivity"
             android:theme="@style/AppTheme"/>
     </application>
 
