@@ -9,12 +9,16 @@ import com.company.zeerorg.mynotes.main.MyApplication
 class NoteRepository(daoSession: DaoSession = MyApplication.daoSession) : NoteRepositoryInterface {
 
     override fun hasBeenUpdated(note: Note) {
+        if(!isPresent(note))
+            return
         val toUpdate = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(note.id)).unique()
         toUpdate.isUpdated = false
         noteDao.update(toUpdate)
     }
 
     override fun updateNote(note: Note) {
+        if(!isPresent(note))
+            return
         val toUpdate = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(note.id)).unique()
         toUpdate.data = note.data
         toUpdate.timestamp = note.timestamp
@@ -23,7 +27,7 @@ class NoteRepository(daoSession: DaoSession = MyApplication.daoSession) : NoteRe
     }
 
     override fun setObjectId(id: Long, value: String) {
-        val note = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique()
+        val note = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique() ?: return
         note.objectId = value
         noteDao.update(note)
     }
@@ -50,7 +54,7 @@ class NoteRepository(daoSession: DaoSession = MyApplication.daoSession) : NoteRe
     }
 
     override fun setUploaded(id: Long, value: Boolean) {
-        val note = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique()
+        val note = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(id)).unique() ?: return
         note.isUploaded = value
         noteDao.update(note)
     }
@@ -74,7 +78,7 @@ class NoteRepository(daoSession: DaoSession = MyApplication.daoSession) : NoteRe
 
     override fun deleteNote(note: Note) {
         Log.e("Local repo", note.id.toString())
-        val toDelete = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(note.id)).unique()
+        val toDelete = noteDao.queryBuilder().where(NoteDao.Properties.Id.eq(note.id)).unique() ?: return
         noteDao.delete(toDelete)
     }
 
