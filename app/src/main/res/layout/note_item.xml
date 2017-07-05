@@ -1,87 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/note_item"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@color/white"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
     android:spinnerMode="dialog">
-    <com.andexert.library.RippleView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        rv_centered="true"
-        app:rv_rippleDuration="200"
-        app:rv_color="@color/grey">
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/contain_data_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="48dp">
-        <TextView
-            android:text="@string/hello_world"
-            android:id="@+id/note_data"
-            android:textSize="16sp"
-            android:layout_weight="1"
-            android:ellipsize="none"
-            android:maxLines="100"
-            android:scrollHorizontally="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey"
-            android:id="@+id/view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </android.support.constraint.ConstraintLayout>
-    </com.andexert.library.RippleView>
+    <!--<com.andexert.library.RippleView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:rv_color="@color/grey"-->
+        <!--app:rv_rippleDuration="200">-->
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/contain_data_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:minHeight="48dp">
+
+            <TextView
+                android:id="@+id/note_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:ellipsize="none"
+                android:maxLines="100"
+                android:scrollHorizontally="false"
+                android:text="@string/hello_world"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    <!--</com.andexert.library.RippleView>-->
+
     <LinearLayout
         android:id="@+id/extra_function"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp">
+
         <com.andexert.library.RippleView
             android:id="@+id/more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            rv_centered="true">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="28dp"
-            android:text="EDIT"
-            android:textSize="12sp"
-            android:background="@drawable/note_fun_btn"
-            tools:layout_editor_absoluteY="0dp" />
-        </com.andexert.library.RippleView>
-        <com.andexert.library.RippleView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             rv_centered="true"
-            android:layout_weight="1">
-        <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="28dp"
-            android:text="DELETE"
-            android:textSize="12sp"
-            android:background="@drawable/note_fun_btn"
-            android:layout_weight="1"
-            tools:layout_editor_absoluteY="0dp" />
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/note_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/note_fun_btn"
+                android:minHeight="32dp"
+                android:text="EDIT"
+                android:textSize="12sp"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </com.andexert.library.RippleView>
+
+        <com.andexert.library.RippleView
+            rv_centered="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/note_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/note_fun_btn"
+                android:minHeight="32dp"
+                android:text="DELETE"
+                android:textSize="12sp"
+                tools:layout_editor_absoluteY="0dp" />
+
         </com.andexert.library.RippleView>
     </LinearLayout>
 

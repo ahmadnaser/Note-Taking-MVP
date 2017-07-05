@@ -34,6 +34,12 @@ class NotesAdapter(val notesList: MutableList<Note>,
                 selected = position
             notifyDataSetChanged()
         }
+        holder.editBtn.setOnClickListener{
+            editNote(notesList[position])
+        }
+        holder.delBtn.setOnClickListener{
+            delNote(notesList[position])
+        }
     }
 
     override fun onCreateViewHolder(view: ViewGroup, position: Int): NoteViewHolder {
