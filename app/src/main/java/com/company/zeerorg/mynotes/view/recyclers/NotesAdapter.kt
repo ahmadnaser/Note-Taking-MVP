@@ -3,6 +3,7 @@ package com.company.zeerorg.mynotes.view.recyclers
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.company.zeerorg.mynotes.R
 import com.company.zeerorg.mynotes.model.Note
@@ -16,12 +17,22 @@ class NotesAdapter(val notesList: MutableList<Note>,
                    val editNote: (org: Note) -> Unit,
                    val delNote: (org: Note) -> Unit) : RecyclerView.Adapter<NoteViewHolder>() {
 
+    var selected: Int = -1
+
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
         holder.data.text = note.data
-        holder.mainView.setOnClickListener {
+        if(selected == position)
+            holder.extraFunction.visibility = View.VISIBLE
+        else
+            holder.extraFunction.visibility = View.GONE
+        holder.dataContainer.setOnClickListener {
             Log.e("Adapter", position.toString())
-            editNote(notesList[position])
+            if(selected == position)
+                selected = -1
+            else
+                selected = position
+            notifyDataSetChanged()
         }
     }
 

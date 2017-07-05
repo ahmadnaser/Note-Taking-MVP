@@ -10,4 +10,8 @@ import com.company.zeerorg.mynotes.R
  */
 class NoteViewHolder(val mainView: View) : RecyclerView.ViewHolder(mainView) {
     val data = mainView.findViewById(R.id.note_data) as TextView
+
+    val dataContainer = mainView.findViewById(R.id.contain_data_view) as View
+
+    val extraFunction = mainView.findViewById(R.id.extra_function) as View
 }

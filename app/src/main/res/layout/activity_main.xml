@@ -4,18 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.company.zeerorg.mynotes.view.NoteActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/notes_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
     </android.support.v7.widget.RecyclerView>
 
+    <com.andexert.library.RippleView
+        android:id="@+id/more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        rv_centered="true">
     <Button
         android:id="@+id/new_note_btn"
         android:layout_width="match_parent"
@@ -23,9 +35,9 @@
         android:clickable="true"
         android:focusable="true"
         android:text="Add Note"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textColor="@color/white"
+        android:background="@drawable/add_note_btn"
+        style="?android:attr/borderlessButtonStyle"/>
+    </com.andexert.library.RippleView>
 
 </android.support.constraint.ConstraintLayout>

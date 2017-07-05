@@ -30,7 +30,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
     override fun pushToBackend(note: Note) {
         val noteObject = ParseObject("Note")
         noteObject.put("user", ParseUser.getCurrentUser().username)
-        noteObject.put("id", note.id)
+        noteObject.put("identifier", note.id)
         noteObject.put("data", note.data)
         noteObject.put("timestamp", note.timestamp)
         noteObject.saveInBackground{
@@ -57,7 +57,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
     override fun getAllNotes(callback: (listNote: MutableList<Note>) -> Unit) {
         val query = ParseQuery.getQuery<ParseObject>("Note")
         query.whereEqualTo("user", ParseUser.getCurrentUser().username)
-        query.orderByAscending("id")
+        query.orderByAscending("identifier")
         query.findInBackground{ listObj, e ->
             if(e == null) {
                 val listNote = mutableListOf<Note>()
@@ -80,7 +80,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
     override fun pullNote(id: Long) {
         val query = ParseQuery.getQuery<ParseObject>("Note")
         query.whereEqualTo("user", ParseUser.getCurrentUser().username)
-        query.whereEqualTo("id", id)
+        query.whereEqualTo("identifier", id)
         query.getFirstInBackground{ obj, e ->
             if(e == null)
                 obj.deleteInBackground()
@@ -90,7 +90,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
     fun toLocalNote(parseNote: ParseObject) : Note {
         val note = Note()
         note.objectId = parseNote.objectId
-        note.id = parseNote.getLong("id")
+        note.id = parseNote.getLong("identifier")
         note.data = parseNote.getString("data")
         note.uploaded = true
         note.timestamp = parseNote.getLong("timestamp")

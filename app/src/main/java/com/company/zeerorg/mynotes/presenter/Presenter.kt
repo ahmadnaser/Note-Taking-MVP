@@ -71,6 +71,8 @@ class Presenter(val view: NoteDependencyInterface,
     override fun startLoad() {
         // Removed uploading of not uploaded notes
         notesList.clear()
+        notesList.addAll(noteRepo.getAll())
+        view.updateRecycler()
         helpers.checkOnline(
                 {
                     executeLoggedData()
@@ -78,6 +80,7 @@ class Presenter(val view: NoteDependencyInterface,
                         Log.e("Presenter", "Updating from Backend")
                         notesList.clear()
                         notesList.addAll(listNote)
+                        Log.e("Presenter", listNote.toString())
                         view.updateRecycler()
                         noteRepo.clearAll()
                         noteRepo.setAll(listNote)
@@ -123,5 +126,19 @@ class Presenter(val view: NoteDependencyInterface,
                     noteOnlineRepo.pullNote(id)   // Since note is deleted from local repository I will use the ID
                 }
         )
+    }
+
+    fun addLink(text: String) : String {
+        val fir = "<a href=\""
+        val last = "</a>"
+        val mid = "\">"
+        val newText = text
+        for(x in newText.split(" ")) {
+            if(x.startsWith("http")) {
+                val link = x
+                x.replace(link, fir+link+mid+link+last)
+            }
+        }
+        return newText
     }
 }

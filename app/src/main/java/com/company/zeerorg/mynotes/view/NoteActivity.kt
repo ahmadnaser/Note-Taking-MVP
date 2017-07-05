@@ -2,8 +2,10 @@ package com.company.zeerorg.mynotes.view
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -38,22 +40,23 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         setContentView(R.layout.activity_main)
 
         presenter = Presenter(this)
-        presenter.startLoad()
-
         adapter = NotesAdapter(presenter.getNotesList().asReversed(), this::editNote, this::delNote)
+
+        presenter.startLoad()
         actionBar.title = "Notes"
+        actionBar.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.black)))
 
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = GridLayoutManager(this, 1)
         adapter.notifyDataSetChanged()
 
         newNoteBtn.setOnClickListener{
             clickedFab()
         }
 
-        val itemTouch = TouchHelper(adapter)
-        val itemTouchHelper = ItemTouchHelper(itemTouch)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+//        val itemTouch = TouchHelper(adapter)
+//        val itemTouchHelper = ItemTouchHelper(itemTouch)
+//        itemTouchHelper.attachToRecyclerView(recyclerView)
 
 
 //        recyclerView.adapter = fastAdapter
