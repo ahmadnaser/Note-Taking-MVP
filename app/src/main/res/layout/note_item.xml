@@ -79,6 +79,27 @@
         android:layout_marginBottom="8dp">
 
         <com.andexert.library.RippleView
+            android:id="@+id/note_url_container"
+            android:visibility="gone"
+            rv_centered="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/note_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/note_fun_btn"
+                android:minHeight="32dp"
+                android:text="GO TO"
+                android:textSize="12sp"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </com.andexert.library.RippleView>
+
+        <com.andexert.library.RippleView
             android:id="@+id/more"
             rv_centered="true"
             android:layout_width="wrap_content"

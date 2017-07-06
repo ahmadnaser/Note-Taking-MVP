@@ -8,5 +8,7 @@ package com.company.zeerorg.mynotes.view
 interface NoteDependencyInterface {
     fun updateRecycler()
 
+    fun notifyDelete(position: Int)
+
     fun getFileDirectory() : String
 }

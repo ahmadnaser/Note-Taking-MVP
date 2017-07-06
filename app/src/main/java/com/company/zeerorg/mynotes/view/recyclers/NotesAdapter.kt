@@ -1,5 +1,6 @@
 package com.company.zeerorg.mynotes.view.recyclers
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,13 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import com.company.zeerorg.mynotes.R
 import com.company.zeerorg.mynotes.model.Note
+import android.support.v4.content.ContextCompat.startActivity
+import android.content.Intent
+import android.net.Uri
+
 
 /**
  * Created by zeerorg on 6/9/17.
  *
- * TODO : here I am using Notes as raw in onBindViewHolder find a way to abstract this so that view and model are not bound
+ * TODO : (Fucking Important) here I am using Notes as raw in onBindViewHolder find a way to abstract this so that view and model are not bound
  */
 class NotesAdapter(val notesList: MutableList<Note>,
+                   val context: Context,
                    val editNote: (org: Note) -> Unit,
                    val delNote: (org: Note) -> Unit) : RecyclerView.Adapter<NoteViewHolder>() {
 
@@ -21,7 +27,32 @@ class NotesAdapter(val notesList: MutableList<Note>,
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
-        holder.data.text = note.data
+        if(note.data != "" && note.data != null) {
+            holder.data.visibility = View.VISIBLE
+            var data = note.data
+
+            holder.data.text = data
+
+            if(data.contains("http")) {
+                var link = ""
+                for(x in data.split(" ")){
+                    if(x.contains("http")) {
+                        link = x
+                        holder.urlBtnCnt.visibility = View.VISIBLE
+                        holder.urlBtn.setOnClickListener{
+                            val url = Uri.parse(link)
+                            val intent = Intent(Intent.ACTION_VIEW, url)
+                            startActivity(context, intent, null)
+                        }
+                    }
+                }
+                Log.e("Adapter", "Found Url " + link)
+            }
+            Log.e("Adapter", note.data)
+        } else {
+            holder.data.visibility = View.GONE
+            Log.e("Adapter", "Bye bye title: " + position.toString())
+        }
         if(note.title != "" && note.title != null) {
             holder.title.visibility = View.VISIBLE
             holder.title.text = note.title
@@ -51,6 +82,7 @@ class NotesAdapter(val notesList: MutableList<Note>,
         }
         holder.delBtn.setOnClickListener{
             delNote(notesList[position])
+            notifyItemRemoved(position)
         }
     }
 

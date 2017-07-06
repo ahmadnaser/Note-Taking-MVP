@@ -40,7 +40,7 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         setContentView(R.layout.activity_main)
 
         presenter = Presenter(this)
-        adapter = NotesAdapter(presenter.getNotesList().asReversed(), this::editNote, this::delNote)
+        adapter = NotesAdapter(presenter.getNotesList().asReversed(), this, this::editNote, this::delNote)
 
         presenter.startLoad()
         actionBar.title = "Notes"
@@ -105,6 +105,10 @@ class NoteActivity : Activity(), NoteDependencyInterface {
 
     override fun updateRecycler() {
         adapter.notifyDataSetChanged()
+    }
+
+    override fun notifyDelete(position: Int) {
+        adapter.notifyItemRemoved(position)
     }
 
     override fun getFileDirectory(): String {

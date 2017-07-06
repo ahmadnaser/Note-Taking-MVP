@@ -41,7 +41,7 @@ class Presenter(val view: NoteDependencyInterface,
     }
 
     override fun addNote(data: String, title: String){
-        if(data.trim() == "") {
+        if(data.trim() == "" && title.trim() == "") {
             return
         }
         val note = noteRepo.createNote(data.trim(), title.trim())
@@ -95,18 +95,15 @@ class Presenter(val view: NoteDependencyInterface,
 
     override fun deleteNote(note: Note) {
         noteRepo.deleteNote(note)
-
+        val position = notesList.indexOf(note)
+        notesList.remove(note)
         helpers.checkOnline(
                 {
                     noteOnlineRepo.pullNote(note)
-                    notesList.remove(note)
-                    view.updateRecycler()
                     executeLoggedData()
                 },
                 {
                     fileLog.logDeleteNote(note.id)
-                    notesList.remove(note)
-                    view.updateRecycler()
                 }
         )
     }
