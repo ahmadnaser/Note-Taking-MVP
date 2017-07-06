@@ -43,9 +43,10 @@ class NoteRepository(daoSession: DaoSession = MyApplication.daoSession) : NoteRe
         return true
     }
 
-    override fun createNote(data: String): Note {
+    override fun createNote(data: String, title: String): Note {
         val note =  Note()
         note.data = data
+        note.title = title
         note.id = System.currentTimeMillis()
         note.isUploaded = false
         note.isUpdated = false

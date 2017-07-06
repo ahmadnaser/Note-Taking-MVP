@@ -67,12 +67,15 @@ class NoteActivity : Activity(), NoteDependencyInterface {
 
     private fun editNote(org: Note) : Unit {
         val builder = AlertDialog.Builder(this)
-        val input = EditText(this)
-        Log.e("Activty", org.data)
+        val inflater = this.layoutInflater
+        val mainLayout = inflater.inflate(R.layout.note_dialog, null)
+        val input = mainLayout.findViewById(R.id.edit_data) as EditText
+        val inpTitle = mainLayout.findViewById(R.id.edit_title) as EditText
 
         input.setText(org.data)
-        builder.setView(input)
-        builder.setPositiveButton("Update", { _, _ -> presenter.updateNote(org, input.text.toString()) })
+        inpTitle.setText(org.title)
+        builder.setView(mainLayout)
+        builder.setPositiveButton("Update", { _, _ -> presenter.updateNote(org, input.text.toString(), inpTitle.text.toString()) })
         builder.setNegativeButton("Cancel", { dialog, _ -> dialog.cancel()})
 
         builder.show()
@@ -84,10 +87,13 @@ class NoteActivity : Activity(), NoteDependencyInterface {
 
     private fun clickedFab() {
         val builder = AlertDialog.Builder(this)
-        val input = EditText(this)
+        val inflater = this.layoutInflater
+        val mainLayout = inflater.inflate(R.layout.note_dialog, null)
+        val input = mainLayout.findViewById(R.id.edit_data) as EditText
+        val inpTitle = mainLayout.findViewById(R.id.edit_title) as EditText
 
-        builder.setView(input)
-        builder.setPositiveButton("Create", { _, _ -> presenter.addNote(input.text.toString()) })
+        builder.setView(mainLayout)
+        builder.setPositiveButton("Create", { _, _ -> presenter.addNote(input.text.toString(), inpTitle.text.toString()) })
         builder.setNegativeButton("Cancel", { dialog, _ -> dialog.cancel()})
 
         builder.show()

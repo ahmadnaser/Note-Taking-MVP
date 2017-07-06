@@ -6,7 +6,7 @@ package com.company.zeerorg.mynotes.model
 interface NoteRepositoryInterface {
     fun pushNote(bareNote: Note) : Boolean
 
-    fun createNote(data: String): Note
+    fun createNote(data: String, title: String): Note
 
     fun getAll() : MutableList<Note>
 

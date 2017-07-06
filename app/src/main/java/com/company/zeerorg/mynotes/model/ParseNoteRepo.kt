@@ -16,6 +16,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
                 { obj, e ->
                     if(e == null) {
                         obj.put("data", note.data)
+                        obj.put("title", note.title)
                         obj.put("timestamp", note.timestamp)
                         obj.saveInBackground {
                             localRepo.hasBeenUpdated(note)
@@ -33,6 +34,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
         noteObject.put("identifier", note.id)
         noteObject.put("data", note.data)
         noteObject.put("timestamp", note.timestamp)
+        noteObject.put("title", note.title)
         noteObject.saveInBackground{
             localRepo.setUploaded(note.id, true)
             localRepo.setObjectId(note.id, noteObject.objectId)
@@ -94,6 +96,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
         note.data = parseNote.getString("data")
         note.uploaded = true
         note.timestamp = parseNote.getLong("timestamp")
+        note.title = parseNote.getString("title")
         return note
     }
 }

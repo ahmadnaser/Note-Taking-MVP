@@ -26,6 +26,18 @@ public class Note {
     @NotNull
     private boolean updated;  // means if it is different from one in backend repo
 
+    private String objectId;
+
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getObjectId() {
         return objectId;
     }
@@ -34,17 +46,16 @@ public class Note {
         this.objectId = objectId;
     }
 
-    private String objectId;
-
-    @Generated(hash = 421258113)
+    @Generated(hash = 1707130587)
     public Note(long id, @NotNull String data, boolean uploaded, long timestamp,
-            boolean updated, String objectId) {
+            boolean updated, String objectId, String title) {
         this.id = id;
         this.data = data;
         this.uploaded = uploaded;
         this.timestamp = timestamp;
         this.updated = updated;
         this.objectId = objectId;
+        this.title = title;
     }
 
     @Generated(hash = 1272611929)

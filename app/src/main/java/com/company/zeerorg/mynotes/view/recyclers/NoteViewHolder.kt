@@ -3,6 +3,7 @@ package com.company.zeerorg.mynotes.view.recyclers
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import com.company.zeerorg.mynotes.R
 
@@ -15,6 +16,8 @@ class NoteViewHolder(val mainView: View) : RecyclerView.ViewHolder(mainView) {
     val dataContainer = mainView.findViewById(R.id.contain_data_view) as View
 
     val extraFunction = mainView.findViewById(R.id.extra_function) as View
+
+    val title = mainView.findViewById(R.id.note_title) as TextView
 
     val editBtn = mainView.findViewById(R.id.note_edit) as Button
 

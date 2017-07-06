@@ -19,9 +19,10 @@ class Presenter(val view: NoteDependencyInterface,
 
     private var notesList : MutableList<Note> = mutableListOf()
 
-    override fun updateNote(note: Note, newData: String) {
-        if(newData.trim() != note.data) {
+    override fun updateNote(note: Note, newData: String, newTitle: String) {
+        if(newData.trim() != note.data || newTitle.trim() != note.title) {
             note.data = newData
+            note.title = newTitle
             note.timestamp = System.currentTimeMillis()
             noteRepo.updateNote(note)
             helpers.checkOnline(
@@ -39,11 +40,11 @@ class Presenter(val view: NoteDependencyInterface,
         }
     }
 
-    override fun addNote(data: String){
+    override fun addNote(data: String, title: String){
         if(data.trim() == "") {
             return
         }
-        val note = noteRepo.createNote(data)
+        val note = noteRepo.createNote(data.trim(), title.trim())
         noteRepo.pushNote(note)
         notesList.add(note)
         helpers.checkOnline(
@@ -87,9 +88,6 @@ class Presenter(val view: NoteDependencyInterface,
                     }
                 },
                 {
-                    notesList.clear()
-                    notesList.addAll(noteRepo.getAll())
-                    view.updateRecycler()
                     Log.e("presenter", "Continue with offline database")
                 }
         )

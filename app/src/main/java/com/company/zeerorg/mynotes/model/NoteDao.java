@@ -28,6 +28,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
         public final static Property Timestamp = new Property(3, long.class, "timestamp", false, "TIMESTAMP");
         public final static Property Updated = new Property(4, boolean.class, "updated", false, "UPDATED");
         public final static Property ObjectId = new Property(5, String.class, "objectId", false, "OBJECT_ID");
+        public final static Property Title = new Property(6, String.class, "title", false, "TITLE");
     }
 
 
@@ -48,7 +49,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
                 "\"UPLOADED\" INTEGER NOT NULL ," + // 2: uploaded
                 "\"TIMESTAMP\" INTEGER NOT NULL ," + // 3: timestamp
                 "\"UPDATED\" INTEGER NOT NULL ," + // 4: updated
-                "\"OBJECT_ID\" TEXT);"); // 5: objectId
+                "\"OBJECT_ID\" TEXT," + // 5: objectId
+                "\"TITLE\" TEXT);"); // 6: title
     }
 
     /** Drops the underlying database table. */
@@ -70,6 +72,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
         if (objectId != null) {
             stmt.bindString(6, objectId);
         }
+ 
+        String title = entity.getTitle();
+        if (title != null) {
+            stmt.bindString(7, title);
+        }
     }
 
     @Override
@@ -84,6 +91,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
         String objectId = entity.getObjectId();
         if (objectId != null) {
             stmt.bindString(6, objectId);
+        }
+ 
+        String title = entity.getTitle();
+        if (title != null) {
+            stmt.bindString(7, title);
         }
     }
 
@@ -100,7 +112,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
             cursor.getShort(offset + 2) != 0, // uploaded
             cursor.getLong(offset + 3), // timestamp
             cursor.getShort(offset + 4) != 0, // updated
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // objectId
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // objectId
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // title
         );
         return entity;
     }
@@ -113,6 +126,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
         entity.setTimestamp(cursor.getLong(offset + 3));
         entity.setUpdated(cursor.getShort(offset + 4) != 0);
         entity.setObjectId(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setTitle(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     @Override

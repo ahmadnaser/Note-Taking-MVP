@@ -22,18 +22,30 @@ class NotesAdapter(val notesList: MutableList<Note>,
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
         holder.data.text = note.data
+        if(note.title != "" && note.title != null) {
+            holder.title.visibility = View.VISIBLE
+            holder.title.text = note.title
+            Log.e("Adapter", note.title)
+        } else {
+            holder.title.visibility = View.GONE
+            Log.e("Adapter", "Bye bye title: " + position.toString())
+        }
+
         if(selected == position)
             holder.extraFunction.visibility = View.VISIBLE
         else
             holder.extraFunction.visibility = View.GONE
         holder.dataContainer.setOnClickListener {
             Log.e("Adapter", position.toString())
+            val prev = selected
             if(selected == position)
                 selected = -1
             else
                 selected = position
-            notifyDataSetChanged()
+            notifyItemChanged(prev)
+            notifyItemChanged(selected)
         }
+
         holder.editBtn.setOnClickListener{
             editNote(notesList[position])
         }
