@@ -95,15 +95,16 @@ class Presenter(val view: NoteDependencyInterface,
 
     override fun deleteNote(note: Note) {
         noteRepo.deleteNote(note)
-        val position = notesList.indexOf(note)
         notesList.remove(note)
         helpers.checkOnline(
                 {
                     noteOnlineRepo.pullNote(note)
                     executeLoggedData()
+                    view.updateRecycler()
                 },
                 {
                     fileLog.logDeleteNote(note.id)
+                    view.updateRecycler()
                 }
         )
     }

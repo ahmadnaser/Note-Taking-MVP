@@ -8,6 +8,9 @@ import com.parse.ParseUser
  * Created by zeerorg on 6/14/17.
  */
 class UserRepository : UserRepositoryInterface {
+    override fun getUser(): ParseUser {
+        return ParseUser.getCurrentUser()
+    }
 
     override fun isLoggedIn(): Boolean {
         return ParseUser.getCurrentUser() != null

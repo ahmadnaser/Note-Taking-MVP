@@ -1,14 +1,15 @@
 package com.company.zeerorg.mynotes.model
 
 import android.util.Log
+import com.parse.ParseACL
 import com.parse.ParseObject
-import com.parse.ParseUser
 import com.parse.ParseQuery
 
 /**
  * Created by zeerorg on 6/20/17.
  */
-class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) : ParseNoteRepoInterface {
+class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository(),
+                    val userRepo: UserRepositoryInterface = UserRepository()) : ParseNoteRepoInterface {
 
     override fun updateBackend(note: Note) {
         val query = ParseQuery.getQuery<ParseObject>("Note")
@@ -30,11 +31,12 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
 
     override fun pushToBackend(note: Note) {
         val noteObject = ParseObject("Note")
-        noteObject.put("user", ParseUser.getCurrentUser().username)
+        noteObject.put("user", userRepo.getUser().username)
         noteObject.put("identifier", note.id)
         noteObject.put("data", note.data)
         noteObject.put("timestamp", note.timestamp)
         noteObject.put("title", note.title)
+        noteObject.acl = ParseACL(userRepo.getUser())
         noteObject.saveInBackground{
             localRepo.setUploaded(note.id, true)
             localRepo.setObjectId(note.id, noteObject.objectId)
@@ -43,7 +45,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
 
     override fun getLatestNoteBackground(skip: Int, latestNoteCallback: (note: Note) -> Unit, finalCallback: () -> Unit) {
         val query = ParseQuery.getQuery<ParseObject>("Note")
-        query.whereEqualTo("user", ParseUser.getCurrentUser().username)
+        query.whereEqualTo("user", userRepo.getUser().username)
         query.skip = skip
         query.getFirstInBackground{ parseNote, e ->
             if(e == null) {
@@ -58,7 +60,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
 
     override fun getAllNotes(callback: (listNote: MutableList<Note>) -> Unit) {
         val query = ParseQuery.getQuery<ParseObject>("Note")
-        query.whereEqualTo("user", ParseUser.getCurrentUser().username)
+        query.whereEqualTo("user", userRepo.getUser().username)
         query.orderByAscending("identifier")
         query.findInBackground{ listObj, e ->
             if(e == null) {
@@ -81,7 +83,7 @@ class ParseNoteRepo(val localRepo : NoteRepositoryInterface = NoteRepository()) 
 
     override fun pullNote(id: Long) {
         val query = ParseQuery.getQuery<ParseObject>("Note")
-        query.whereEqualTo("user", ParseUser.getCurrentUser().username)
+        query.whereEqualTo("user", userRepo.getUser().username)
         query.whereEqualTo("identifier", id)
         query.getFirstInBackground{ obj, e ->
             if(e == null)

@@ -32,6 +32,7 @@ class NotesAdapter(val notesList: MutableList<Note>,
             var data = note.data
 
             holder.data.text = data
+            holder.urlBtnCnt.visibility = View.GONE
 
             if(data.contains("http")) {
                 var link = ""
