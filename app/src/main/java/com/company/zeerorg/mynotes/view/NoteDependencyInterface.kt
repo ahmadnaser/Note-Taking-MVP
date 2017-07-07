@@ -11,4 +11,6 @@ interface NoteDependencyInterface {
     fun notifyDelete(position: Int)
 
     fun getFileDirectory() : String
+
+    fun finishActivity()
 }

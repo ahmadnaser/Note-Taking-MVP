@@ -15,4 +15,8 @@ interface PresenterInterface {
     fun updateNote(note: Note, newData: String, newTitle: String)
 
     fun deleteNote(note: Note)
+
+    fun logOut()
+
+    fun getUsername() : String
 }

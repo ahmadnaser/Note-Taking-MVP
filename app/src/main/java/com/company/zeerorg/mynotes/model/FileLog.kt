@@ -14,6 +14,13 @@ class FileLog(val dir: String) : FileLogInterface {
         var editted: Boolean = false
     }
 
+    init {
+        val file = File(dir, FILENAME)
+        if(!file.exists()){
+            file.createNewFile()
+        }
+    }
+
     override fun logCreateNote(id: Long) {
         editted = true
         val file = File(dir, FILENAME)

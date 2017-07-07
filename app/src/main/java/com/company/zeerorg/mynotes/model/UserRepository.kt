@@ -28,19 +28,19 @@ class UserRepository : UserRepositoryInterface {
         }
     }
 
-    override fun login(email: String, password: String, successLogin: () -> Unit, failLogin: () -> Unit) {
+    override fun login(email: String, password: String, successLogin: () -> Unit, failLogin: (code: Int) -> Unit) {
         ParseUser.logInInBackground(email, password, { user, e ->
             if(user != null) {
                 Log.e("MyApp", "Login success")
                 successLogin()
             } else {
                 Log.e("MyApp", "Login fail " + e.toString())
-                failLogin()
+                failLogin(e.code)
             }
         })
     }
 
-    override fun signUp(email: String, password: String, successSignUp: () -> Unit, failSignUp: () -> Unit) {
+    override fun signUp(email: String, password: String, successSignUp: () -> Unit, failSignUp: (code: Int) -> Unit) {
         val user = ParseUser()
         user.username = email
         user.setPassword(password)
@@ -53,8 +53,16 @@ class UserRepository : UserRepositoryInterface {
             }
             else {
                 Log.e("Signing Up", "Sign Up fail " + e.toString())
-                failSignUp()
+                failSignUp(e.code)
             }
         }
+    }
+
+    override fun logOut() {
+        ParseUser.logOut()
+    }
+
+    override fun getUsername(): String {
+        return ParseUser.getCurrentUser().username
     }
 }

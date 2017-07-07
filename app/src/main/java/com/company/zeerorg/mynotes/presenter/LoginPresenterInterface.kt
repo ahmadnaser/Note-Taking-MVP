@@ -7,4 +7,10 @@ interface LoginPresenterInterface {
     fun checkLogin()
 
     fun attemptLogin(email: String, password: String)
+
+    fun getUserName(): String
+
+    fun logOut()
+
+    fun attemptSignUp(email: String, password: String)
 }

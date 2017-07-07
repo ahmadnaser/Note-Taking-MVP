@@ -10,9 +10,13 @@ interface UserRepositoryInterface {
 
     fun exists(email: String, login: () -> Unit, signUp: () -> Unit)
 
-    fun login(email: String, password: String, successLogin: () -> Unit, failLogin: () -> Unit)
+    fun login(email: String, password: String, successLogin: () -> Unit, failLogin: (code: Int) -> Unit)
 
-    fun signUp(email: String, password: String, successSignUp: () -> Unit, failSignUp: () -> Unit)
+    fun signUp(email: String, password: String, successSignUp: () -> Unit, failSignUp: (code: Int) -> Unit)
 
     fun getUser(): ParseUser
+
+    fun logOut()
+
+    fun getUsername(): String
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_view"
+    android:layout_width="wrap_content"
+    android:layout_height="100dp"
+    android:background="@drawable/user_dialog_style"
+    android:padding="32dp">
+
+    <TextView
+        android:id="@+id/user_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="user"
+        android:textSize="18sp"
+        android:layout_marginTop="4dp"/>
+
+    <com.andexert.library.RippleView
+        android:id="@+id/more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        rv_centered="true"
+        app:rv_color="@color/dark_grey"
+        app:rv_rippleDuration="100">
+
+        <Button
+            android:id="@+id/logout_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="82dp"
+            android:text="LOGOUT"
+            android:textSize="14sp"
+            android:minHeight="42dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/logout_btn" />
+
+    </com.andexert.library.RippleView>
+
+</RelativeLayout>

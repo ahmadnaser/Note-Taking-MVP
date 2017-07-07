@@ -1,24 +1,24 @@
 package com.company.zeerorg.mynotes.view
 
-import android.app.Activity
+import android.app.ActionBar
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.annotation.IdRes
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import com.company.zeerorg.mynotes.R
 import com.company.zeerorg.mynotes.model.Note
+import com.company.zeerorg.mynotes.presenter.LoginPresenterInterface
 import com.company.zeerorg.mynotes.presenter.Presenter
 import com.company.zeerorg.mynotes.presenter.PresenterInterface
 import com.company.zeerorg.mynotes.view.recyclers.NotesAdapter
-import com.company.zeerorg.mynotes.view.recyclers.TouchHelper
 
 
 /**
@@ -27,13 +27,14 @@ import com.company.zeerorg.mynotes.view.recyclers.TouchHelper
  *
  */
 
-class NoteActivity : Activity(), NoteDependencyInterface {
+class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
 
     val recyclerView by bind<RecyclerView>(R.id.notes_recycler)
     val newNoteBtn by lazy(LazyThreadSafetyMode.NONE, { findViewById(R.id.new_note_btn) as Button })
     lateinit var presenter : PresenterInterface// Here goes my MVP architecture and testability
                                                         // This is why we use f***in Dagger
     lateinit var adapter: NotesAdapter
+    lateinit var userPresenter: LoginPresenterInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +44,9 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         adapter = NotesAdapter(presenter.getNotesList().asReversed(), this, this::editNote, this::delNote)
 
         presenter.startLoad()
-        actionBar.title = "Notes"
-        actionBar.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.black)))
+        supportActionBar?.title = "Notes"
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.black)))
+        setCustomActionBar()
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(this, 1)
@@ -99,6 +101,28 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         builder.show()
     }
 
+    private fun setCustomActionBar() {
+        val inflater = this.layoutInflater
+        val mainLayout = inflater.inflate(R.layout.main_action_bar, null)
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.customView = mainLayout.findViewById(R.id.main_view)
+        mainLayout.findViewById(R.id.user_icon).setOnClickListener {
+            val builder = AlertDialog.Builder(this).create()
+            val userDialogLayout = inflater.inflate(R.layout.user_dialog, null)
+
+            userDialogLayout.findViewById(R.id.logout_btn).setOnClickListener {
+                builder.dismiss()
+                presenter.logOut()
+            }
+
+            (userDialogLayout.findViewById(R.id.user_text) as TextView).text = presenter.getUsername()
+
+            builder.setView(userDialogLayout.findViewById(R.id.main_view))
+            builder.show()
+        }
+    }
+
     override fun onBackPressed() {
         finish()
     }
@@ -116,7 +140,11 @@ class NoteActivity : Activity(), NoteDependencyInterface {
         return this.filesDir.absolutePath
     }
 
-    fun <T : View> Activity.bind(@IdRes idRes: Int): Lazy<T> {
+    override fun finishActivity() {
+        finish()
+    }
+
+    fun <T : View> AppCompatActivity.bind(@IdRes idRes: Int): Lazy<T> {
         @Suppress("UNCHECKED_CAST")
         return lazy(LazyThreadSafetyMode.NONE, {findViewById(idRes) as T} )
     }

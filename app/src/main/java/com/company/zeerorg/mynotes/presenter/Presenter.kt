@@ -15,7 +15,8 @@ class Presenter(val view: NoteDependencyInterface,
                 val noteRepo: NoteRepositoryInterface = NoteRepository(),
                 val noteOnlineRepo: ParseNoteRepoInterface = ParseNoteRepo(),
                 val helpers: HelperMethodsInterface = HelperMethods(),
-                val fileLog: FileLogInterface = FileLog(view.getFileDirectory())) : PresenterInterface {
+                val fileLog: FileLogInterface = FileLog(view.getFileDirectory()),
+                val userRepo: UserRepositoryInterface = UserRepository()) : PresenterInterface {
 
     private var notesList : MutableList<Note> = mutableListOf()
 
@@ -136,5 +137,15 @@ class Presenter(val view: NoteDependencyInterface,
             }
         }
         return newText
+    }
+
+    override fun logOut() {
+        userRepo.logOut()
+        noteRepo.clearAll()
+        view.finishActivity()
+    }
+
+    override fun getUsername(): String {
+        return userRepo.getUsername()
     }
 }

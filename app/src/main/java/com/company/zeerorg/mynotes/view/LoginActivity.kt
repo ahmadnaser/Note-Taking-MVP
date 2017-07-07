@@ -12,11 +12,14 @@ import android.support.annotation.IdRes
 import android.widget.*
 import com.company.zeerorg.mynotes.presenter.LoginPresenter
 import com.company.zeerorg.mynotes.presenter.LoginPresenterInterface
+import android.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
+
 
 /**
  * A login screen that offers login via email/password.
  */
-class LoginActivity : Activity(), LoginDependencyInterface {
+class LoginActivity : AppCompatActivity(), LoginDependencyInterface {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -32,6 +35,10 @@ class LoginActivity : Activity(), LoginDependencyInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
         presenter.checkLogin()
 
         setContentView(R.layout.activity_login)
@@ -46,6 +53,11 @@ class LoginActivity : Activity(), LoginDependencyInterface {
 
         val mEmailSignInButton = findViewById(R.id.email_sign_in_button) as Button
         mEmailSignInButton.setOnClickListener { presenter.attemptLogin(mEmailView.text.toString(), mPasswordView.text.toString()) }
+
+        val mEmailSignUpBtn = findViewById(R.id.email_sign_up_button) as Button
+        mEmailSignUpBtn.setOnClickListener {
+            presenter.attemptSignUp(mEmailView.text.toString(), mPasswordView.text.toString())
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -77,6 +89,17 @@ class LoginActivity : Activity(), LoginDependencyInterface {
 
     override fun passwordError(err: String) {
         mPasswordView.error = err
+    }
+
+    override fun noConnectionErr() {
+        val alertDialog = AlertDialog.Builder(this).create()
+
+        alertDialog.setTitle("Info")
+        alertDialog.setMessage("Internet not available, Cross check your internet connectivity and try again")
+        alertDialog.setIcon(android.R.drawable.ic_dialog_alert)
+        alertDialog.setButton("OK") { dialog, which -> finish() }
+
+        alertDialog.show()
     }
 }
 

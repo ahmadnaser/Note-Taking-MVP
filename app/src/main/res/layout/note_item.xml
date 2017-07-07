@@ -36,6 +36,7 @@
                 android:scrollHorizontally="false"
                 android:text="@string/hello_world"
                 android:textSize="16sp"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -95,6 +96,7 @@
                 android:minHeight="32dp"
                 android:text="GO TO"
                 android:textSize="12sp"
+                android:textColor="@color/black"
                 tools:layout_editor_absoluteY="0dp" />
 
         </com.andexert.library.RippleView>
@@ -114,6 +116,7 @@
                 android:minHeight="32dp"
                 android:text="EDIT"
                 android:textSize="12sp"
+                android:textColor="@color/black"
                 tools:layout_editor_absoluteY="0dp" />
 
         </com.andexert.library.RippleView>
@@ -133,6 +136,7 @@
                 android:minHeight="32dp"
                 android:text="DELETE"
                 android:textSize="12sp"
+                android:textColor="@color/black"
                 tools:layout_editor_absoluteY="0dp" />
 
         </com.andexert.library.RippleView>

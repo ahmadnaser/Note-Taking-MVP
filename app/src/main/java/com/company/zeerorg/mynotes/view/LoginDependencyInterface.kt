@@ -11,4 +11,6 @@ interface LoginDependencyInterface {
     fun emailError(err: String)
 
     fun passwordError(err: String)
+
+    fun noConnectionErr()
 }
