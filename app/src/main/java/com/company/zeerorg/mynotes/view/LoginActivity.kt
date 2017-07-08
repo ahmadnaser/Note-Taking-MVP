@@ -81,6 +81,7 @@ class LoginActivity : AppCompatActivity(), LoginDependencyInterface {
         val intent = Intent(this, NoteActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
+        finish()
     }
 
     override fun emailError(err: String) {

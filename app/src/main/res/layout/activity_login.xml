@@ -21,7 +21,7 @@
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
 
-    <FrameLayout
+    <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -42,8 +42,7 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/email"
@@ -123,5 +122,5 @@
             </LinearLayout>
 
         </LinearLayout>
-    </FrameLayout>
+    </ScrollView>
 </LinearLayout>

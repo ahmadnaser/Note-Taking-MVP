@@ -32,7 +32,15 @@
         </activity>
         <activity
             android:name="com.company.zeerorg.mynotes.view.NoteActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme">
+            <intent-filter
+                android:icon="@mipmap/ic_launcher"
+                android:label="Create New Note">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

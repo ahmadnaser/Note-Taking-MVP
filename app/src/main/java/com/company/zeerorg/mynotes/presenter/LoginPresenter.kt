@@ -78,6 +78,7 @@ class LoginPresenter(val loginView: LoginDependencyInterface,
             201 -> loginView.passwordError("Password Missing")
             142 -> loginView.emailError("Validation Error")
             100 -> loginView.noConnectionErr()
+            208 -> loginView.emailError("Account Exists")
         }
     }
 }

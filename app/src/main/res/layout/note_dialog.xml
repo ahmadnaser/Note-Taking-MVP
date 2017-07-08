@@ -5,7 +5,13 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:spinnerMode="dialog">
+    android:spinnerMode="dialog"
+    android:paddingBottom="12dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp">
 
     <EditText
         android:id="@+id/edit_title"
@@ -13,7 +19,13 @@
         android:layout_height="wrap_content"
         android:hint="Title"
         android:layout_weight="1"
-        android:layout_margin="4dp"/>
+        android:textColor="@color/black"
+        android:layout_margin="4dp" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <EditText
         android:id="@+id/edit_data"
         android:layout_width="match_parent"
@@ -21,7 +33,9 @@
         android:hint="Description"
         android:layout_weight="1"
         android:layout_margin="4dp"
-        android:minLines="3"/>
+        android:textColor="@color/black"
+        android:minLines="2"/>
+    </android.support.design.widget.TextInputLayout>
 
 
 </LinearLayout>

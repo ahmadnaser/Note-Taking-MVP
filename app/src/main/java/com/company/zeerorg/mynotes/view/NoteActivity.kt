@@ -1,7 +1,8 @@
 package com.company.zeerorg.mynotes.view
 
 import android.app.ActionBar
-import android.app.AlertDialog
+import android.content.Intent
+import android.support.v7.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.annotation.IdRes
@@ -56,6 +57,10 @@ class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
             clickedFab()
         }
 
+        if(intent.action == Intent.ACTION_SEND) {
+            clickedFab(intent.getStringExtra(Intent.EXTRA_TEXT), "")
+        }
+
 //        val itemTouch = TouchHelper(adapter)
 //        val itemTouchHelper = ItemTouchHelper(itemTouch)
 //        itemTouchHelper.attachToRecyclerView(recyclerView)
@@ -67,8 +72,10 @@ class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
 //        fastAdapter.notifyAdapterDataSetChanged()
     }
 
+
+
     private fun editNote(org: Note) : Unit {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
         val inflater = this.layoutInflater
         val mainLayout = inflater.inflate(R.layout.note_dialog, null)
         val input = mainLayout.findViewById(R.id.edit_data) as EditText
@@ -87,12 +94,15 @@ class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
         presenter.deleteNote(org)
     }
 
-    private fun clickedFab() {
+    private fun clickedFab(text: String = "", title: String = "") {
         val builder = AlertDialog.Builder(this)
         val inflater = this.layoutInflater
         val mainLayout = inflater.inflate(R.layout.note_dialog, null)
         val input = mainLayout.findViewById(R.id.edit_data) as EditText
         val inpTitle = mainLayout.findViewById(R.id.edit_title) as EditText
+
+        input.setText(text)
+        inpTitle.setText(title)
 
         builder.setView(mainLayout)
         builder.setPositiveButton("Create", { _, _ -> presenter.addNote(input.text.toString(), inpTitle.text.toString()) })
@@ -111,10 +121,10 @@ class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
             val builder = AlertDialog.Builder(this).create()
             val userDialogLayout = inflater.inflate(R.layout.user_dialog, null)
 
-            userDialogLayout.findViewById(R.id.logout_btn).setOnClickListener {
+            builder.setButton(AlertDialog.BUTTON_POSITIVE, "Logout", { _, _ ->
                 builder.dismiss()
                 presenter.logOut()
-            }
+            })
 
             (userDialogLayout.findViewById(R.id.user_text) as TextView).text = presenter.getUsername()
 
