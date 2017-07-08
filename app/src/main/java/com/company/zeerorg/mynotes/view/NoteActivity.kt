@@ -58,7 +58,7 @@ class NoteActivity : AppCompatActivity(), NoteDependencyInterface {
         }
 
         if(intent.action == Intent.ACTION_SEND) {
-            clickedFab(intent.getStringExtra(Intent.EXTRA_TEXT), "")
+            clickedFab(intent.getStringExtra(Intent.EXTRA_TEXT), intent.getStringExtra(Intent.EXTRA_TITLE))
         }
 
 //        val itemTouch = TouchHelper(adapter)
