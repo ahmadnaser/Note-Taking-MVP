@@ -26,4 +26,6 @@ class NoteViewHolder(val mainView: View) : RecyclerView.ViewHolder(mainView) {
     val urlBtn = mainView.findViewById(R.id.note_url) as Button
 
     val urlBtnCnt = mainView.findViewById(R.id.note_url_container) as View
+
+    val shareBtn = mainView.findViewById(R.id.note_share) as Button
 }

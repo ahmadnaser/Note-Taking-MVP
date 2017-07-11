@@ -140,6 +140,26 @@
                 tools:layout_editor_absoluteY="0dp" />
 
         </com.andexert.library.RippleView>
+
+        <com.andexert.library.RippleView
+            rv_centered="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/note_share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/note_fun_btn"
+                android:minHeight="32dp"
+                android:text="SHARE"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                tools:layout_editor_absoluteY="0dp" />
+
+        </com.andexert.library.RippleView>
     </LinearLayout>
 
 </LinearLayout>

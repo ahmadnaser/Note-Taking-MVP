@@ -6,6 +6,12 @@ apply plugin: 'org.greenrobot.greendao'
 
 android {
     signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'Everyone123#'
+            storeFile file('/home/zeerorg/Android Keystore/keystore.jks')
+            storePassword 'Everyone'
+        }
     }
     compileSdkVersion 25
     buildToolsVersion '25.0.3'

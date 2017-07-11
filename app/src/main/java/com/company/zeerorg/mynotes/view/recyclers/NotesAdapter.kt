@@ -85,6 +85,13 @@ class NotesAdapter(val notesList: MutableList<Note>,
             delNote(notesList[position])
             notifyItemRemoved(position)
         }
+        holder.shareBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.putExtra(Intent.EXTRA_TITLE, note.title)
+            intent.putExtra(Intent.EXTRA_TEXT, note.data)
+            intent.type = "text/plain"
+            startActivity(context, Intent.createChooser(intent, "SHare Note"), null)
+        }
     }
 
     override fun onCreateViewHolder(view: ViewGroup, position: Int): NoteViewHolder {
